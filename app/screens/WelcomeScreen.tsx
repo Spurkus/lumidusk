@@ -1,5 +1,5 @@
-import React from "react";
-import { withExpoSnack } from "nativewind";
+import type { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { RootStackParamList } from "../../App";
 import {
   Text,
   View,
@@ -14,18 +14,18 @@ import Flower from "../assets/flower.png";
 import Crystal from "../assets/crystal.png";
 import Penguin from "../assets/penguin.png";
 
-interface WelcomeScreenProps {
-  onLayout: () => void | Promise<void>;
-}
+type WelcomeScreenProps = NativeStackScreenProps<
+  RootStackParamList,
+  "WelcomeScreen"
+>;
 
-const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onLayout }) => {
+const WelcomeScreen = ({ navigation }: WelcomeScreenProps) => {
   return (
-    <SafeAreaView className="flex-1 bg-eggblack" onLayout={onLayout}>
-      <View className="mt-20">
+    <SafeAreaView className="flex-1 bg-eggblack">
+      <View className="mt-16">
         <Image
           source={Crystal}
-          className="absolute w-[138px] h-[162px] self-end mb-24 shadow-eggorange"
-          style={styles.shadowOne}
+          className="absolute w-[138px] h-[162px] self-end mb-24 "
         />
         <Text
           className="text-eggwhite mt-10 ml-8"
@@ -44,8 +44,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onLayout }) => {
           {":)"}
         </Text>
         <Image
-          className="absolute w-[140px] h-[150px] mt-[220px] shadow-eggpink"
-          style={styles.shadowOne}
+          className="absolute w-[140px] h-[150px] mt-[220px]"
           source={Flower}
         />
         <Image
@@ -56,7 +55,8 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onLayout }) => {
       <View className="flex-1 items-center space-y-6">
         <TouchableOpacity
           className="justify-center items-center w-[260px] h-[60px] bg-eggorange rounded-3xl shadow-eggorange"
-          style={styles.shadowFive}>
+          style={styles.shadowButton}
+          onPress={() => navigation.navigate("SignUp")}>
           <Text
             className="text-grey"
             style={{ fontFamily: "Satoshi-Bold", fontSize: 20 }}>
@@ -78,11 +78,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onLayout }) => {
 export default WelcomeScreen;
 
 const styles = StyleSheet.create({
-  shadowOne: {
-    shadowOpacity: 0.25,
-    shadowRadius: 18,
-  },
-  shadowFive: {
+  shadowButton: {
     shadowOpacity: 0.5,
     shadowRadius: 20,
   },

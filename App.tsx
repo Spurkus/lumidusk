@@ -1,9 +1,20 @@
 import { useCallback } from "react";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
+
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+
 import WelcomeScreen from "./app/screens/WelcomeScreen";
+import SignUp from "./app/screens/SignUp";
+
+export type RootStackParamList = {
+  WelcomeScreen: undefined;
+  SignUp: undefined;
+};
 
 export default function App() {
+  // Loading fonts
   const [fontsLoaded, fontError] = useFonts({
     "ClashGrotesk-Bold": require("./app/assets/fonts/ClashGrotesk-Bold.otf"),
     "ClashGrotesk-Extralight": require("./app/assets/fonts/ClashGrotesk-Extralight.otf"),
@@ -23,7 +34,7 @@ export default function App() {
     "Satoshi-Regular": require("./app/assets/fonts/Satoshi-Regular.otf"),
   });
 
-  const onLayoutRootView = useCallback(async () => {
+  useCallback(async () => {
     if (fontsLoaded || fontError) {
       await SplashScreen.hideAsync();
     }
@@ -33,5 +44,18 @@ export default function App() {
     return null;
   }
 
-  return <WelcomeScreen onLayout={onLayoutRootView} />;
+  // Create Navigation Stack
+  const RootStack = createNativeStackNavigator<RootStackParamList>();
+
+  return (
+    <NavigationContainer>
+      <RootStack.Navigator
+        screenOptions={{
+          headerShown: false,
+        }}>
+        <RootStack.Screen name="WelcomeScreen" component={WelcomeScreen} />
+        <RootStack.Screen name="SignUp" component={SignUp} />
+      </RootStack.Navigator>
+    </NavigationContainer>
+  );
 }

@@ -7,7 +7,7 @@ import {
   Image,
   TouchableOpacity,
   StyleSheet,
-  Alert,
+  Alert, // Never delete this alert it breaks the whole thing for some reason
 } from "react-native";
 
 import Flower from "../assets/flower.png";

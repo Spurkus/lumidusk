@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../App";
 import {
@@ -11,12 +11,12 @@ import {
   Alert,
   TextInput,
 } from "react-native";
-import React from "react";
 
 import Blob from "../assets/blob.png";
 import Tringle from "../assets/tringle.png";
 import Line from "../assets/line.png";
 import Google from "../assets/google.png";
+import { CollapsibleContainer } from "../components/CollapsibleComponent";
 
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const PASSWORD_REGEX =
@@ -72,6 +72,10 @@ const SignUp = ({ navigation }: SignUpProps) => {
         source={Blob}
         className="absolute w-[162px] h-[238px] self-end mb-24 "
       />
+      <Image
+        source={Tringle}
+        className="absolute w-[82px] h-[160px] top-[380px]"
+      />
       <View className="mt-28 justify-center">
         <Text
           className="text-eggwhite self-center"
@@ -83,10 +87,6 @@ const SignUp = ({ navigation }: SignUpProps) => {
           style={{ fontFamily: "ClashGrotesk-Regular", fontSize: 18 }}>
           Thank you for signing up to Lumidusk! {":)"}
         </Text>
-        <Image
-          source={Tringle}
-          className="absolute w-[82px] h-[160px] bottom-[12px]"
-        />
         <View className="form my-8 justify-center space-y-2">
           <View>
             <Text
@@ -124,18 +124,17 @@ const SignUp = ({ navigation }: SignUpProps) => {
               onBlur={() => setFocusPassword(false)}
               value={password}
             />
-            <View
-              className={`bg-[#f9e3e3] rounded-xl mx-8 my-2 py-2 px-4
-                ${focusPassword && !validPassword ? "" : "hidden"}
-              `}>
-              <Text
-                className="text-egggrey"
-                style={{ fontFamily: "Satoshi-Regular", fontSize: 15 }}>
-                8 to 24 characters. Must include uppercase and lowercase
-                letters, a number and a special character. Allowed special
-                characters: ! & # $ %
-              </Text>
-            </View>
+            <CollapsibleContainer expanded={focusPassword && !validPassword}>
+              <View className="bg-[#f9e3e3] rounded-2xl mx-8 my-2 py-2 px-4 ">
+                <Text
+                  className="text-egggrey"
+                  style={{ fontFamily: "Satoshi-Medium", fontSize: 15 }}>
+                  8 to 24 characters. Must include uppercase and lowercase
+                  letters, a number and a special character.{"\n"}Allowed
+                  special characters: ! & # $ %
+                </Text>
+              </View>
+            </CollapsibleContainer>
           </View>
           <View>
             <Text

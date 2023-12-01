@@ -7,10 +7,12 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import WelcomeScreen from "./app/screens/WelcomeScreen";
 import SignUp from "./app/screens/SignUp";
+import Login from "./app/screens/Login";
 
 export type RootStackParamList = {
   WelcomeScreen: undefined;
   SignUp: undefined;
+  Login: undefined;
 };
 
 export default function App() {
@@ -55,6 +57,7 @@ export default function App() {
         }}>
         <RootStack.Screen name="WelcomeScreen" component={WelcomeScreen} />
         <RootStack.Screen name="SignUp" component={SignUp} />
+        <RootStack.Screen name="Login" component={Login} />
       </RootStack.Navigator>
     </NavigationContainer>
   );

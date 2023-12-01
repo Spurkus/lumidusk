@@ -20,7 +20,7 @@ import { CollapsibleContainer } from "../components/CollapsibleComponent";
 
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const PASSWORD_REGEX =
-  /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!&@#$%]).{8,24}$/;
 
 type SignUpProps = NativeStackScreenProps<RootStackParamList, "SignUp">;
 
@@ -131,7 +131,7 @@ const SignUp = ({ navigation }: SignUpProps) => {
                   style={{ fontFamily: "Satoshi-Medium", fontSize: 15 }}>
                   8 to 24 characters. Must include uppercase and lowercase
                   letters, a number and a special character.{"\n"}Allowed
-                  special characters: ! & # $ %
+                  special characters: ! & @ # $ %
                 </Text>
               </View>
             </CollapsibleContainer>
@@ -186,7 +186,7 @@ const SignUp = ({ navigation }: SignUpProps) => {
               style={{ fontFamily: "Satoshi-Bold", fontSize: 16 }}>
               Already have an account?
             </Text>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate("Login")}>
               <Text
                 className="text-[#C9A7E3]"
                 style={{ fontFamily: "Satoshi-Bold", fontSize: 16 }}>

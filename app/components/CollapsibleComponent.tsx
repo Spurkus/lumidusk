@@ -1,17 +1,19 @@
-import React, { useState } from "react";
-import { LayoutChangeEvent, View, Text } from "react-native";
+import { useState, ReactNode, FunctionComponent } from "react";
+import { LayoutChangeEvent, View } from "react-native";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
 
-export const CollapsibleContainer = ({
+type CollapsibleContainerProps = {
+  children: ReactNode;
+  expanded: boolean;
+};
+
+const CollapsibleContainer: FunctionComponent<CollapsibleContainerProps> = ({
   children,
   expanded,
-}: {
-  children: React.ReactNode;
-  expanded: boolean;
 }) => {
   const [height, setHeight] = useState(0);
   const animatedHeight = useSharedValue(0);
@@ -40,3 +42,5 @@ export const CollapsibleContainer = ({
     </Animated.View>
   );
 };
+
+export default CollapsibleContainer;

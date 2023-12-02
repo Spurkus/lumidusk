@@ -16,7 +16,7 @@ import Blob from "../assets/blob.png";
 import Tringle from "../assets/tringle.png";
 import Line from "../assets/line.png";
 import Google from "../assets/google.png";
-import { CollapsibleContainer } from "../components/CollapsibleComponent";
+import CollapsibleContainer from "../components/CollapsibleComponent";
 
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const PASSWORD_REGEX =
@@ -194,7 +194,7 @@ const SignUp = ({ navigation }: SignUpProps) => {
               </Text>
             </TouchableOpacity>
           </View>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate("Home")}>
             <Text
               className="text-egglightgrey self-center"
               style={{ fontFamily: "Satoshi-Bold", fontSize: 16 }}>

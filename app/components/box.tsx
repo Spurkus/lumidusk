@@ -1,13 +1,26 @@
-import React, { ReactNode } from "react";
-import { View } from "react-native";
+import { ReactNode, FunctionComponent } from "react";
+import { View, StyleSheet } from "react-native";
 
 interface BoxProps {
-  className: string;
+  boxName?: string;
   children: ReactNode;
 }
 
-const Box: React.FC<BoxProps> = ({ className, children }) => {
-  return <View className={className}>{children}</View>;
+const Box: FunctionComponent<BoxProps> = ({ boxName, children }) => {
+  return (
+    <View
+      className={`bg-egggrey rounded-2xl shadow-egggrey py-3 px-4 ${boxName}`}
+      style={styles.shadowBox}>
+      {children}
+    </View>
+  );
 };
 
 export default Box;
+
+const styles = StyleSheet.create({
+  shadowBox: {
+    shadowOpacity: 0.75,
+    shadowRadius: 26,
+  },
+});

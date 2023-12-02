@@ -159,7 +159,7 @@ const Login = ({ navigation }: LoginProps) => {
               </Text>
             </TouchableOpacity>
           </View>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate("Home")}>
             <Text
               className="text-egglightgrey self-center"
               style={{ fontFamily: "Satoshi-Bold", fontSize: 16 }}>

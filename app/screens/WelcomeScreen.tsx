@@ -63,7 +63,7 @@ const WelcomeScreen = ({ navigation }: WelcomeScreenProps) => {
             Get Started
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate("Home")}>
           <Text
             className="text-egglightgrey"
             style={{ fontFamily: "Satoshi-Bold", fontSize: 16 }}>

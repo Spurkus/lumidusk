@@ -1,3 +1,4 @@
+import { useState } from "react";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../App";
 import {
@@ -35,6 +36,9 @@ const currentDate = date.toLocaleDateString();
 const quote = '"remember to be kind to yourself"';
 
 const Home = ({ navigation }: HomeProps) => {
+  const [buttonMessage, setButtonMessage] = useState(
+    "Start Today's Journaling",
+  );
   return (
     <SafeAreaView className="flex-1 bg-eggblack">
       <Image
@@ -75,18 +79,17 @@ const Home = ({ navigation }: HomeProps) => {
           </Text>
         </Box>
       </View>
-      <CalendarComponent />
+      <CalendarComponent setMessage={setButtonMessage} />
       <View className="mt-12 flex-1 items-center space-y-6">
         <TouchableOpacity
-          className="h-[60px] w-[260px] items-center justify-center rounded-3xl bg-eggorange shadow-eggorange"
+          className="h-[60px] items-center justify-center rounded-3xl bg-eggorange px-4 shadow-eggorange"
           style={styles.shadowButton}
-          onPress={() => navigation.navigate("SignUp")}
         >
           <Text
             className="text-grey"
             style={{ fontFamily: "Satoshi-Bold", fontSize: 20 }}
           >
-            Start Today's Journaling
+            {buttonMessage}
           </Text>
         </TouchableOpacity>
       </View>

@@ -9,8 +9,9 @@ interface BoxProps {
 const Box: FunctionComponent<BoxProps> = ({ boxName, children }) => {
   return (
     <View
-      className={`bg-egggrey rounded-2xl shadow-egggrey py-3 px-4 ${boxName}`}
-      style={styles.shadowBox}>
+      className={`rounded-2xl bg-egggrey px-4 py-3 shadow-egggrey ${boxName}`}
+      style={styles.shadowBox}
+    >
       {children}
     </View>
   );

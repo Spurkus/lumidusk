@@ -55,14 +55,14 @@ const SignUp = ({ navigation }: SignUpProps) => {
         "Well something went wrong...",
         (validEmail ? "" : "Please put in the correct email format :)") +
           (validPassword ? "" : "\nDid you follow the password format?") +
-          (validMatch ? "" : "\nMake sure that the password matches!!")
+          (validMatch ? "" : "\nMake sure that the password matches!!"),
       );
       return;
     }
 
     Alert.alert(
       "Sign up has not been implemented yet >.<",
-      "thanks for understanding :3"
+      "thanks for understanding :3",
     );
   };
 
@@ -70,32 +70,35 @@ const SignUp = ({ navigation }: SignUpProps) => {
     <SafeAreaView className="flex-1 bg-eggblack">
       <Image
         source={Blob}
-        className="absolute w-[162px] h-[238px] self-end mb-24 "
+        className="absolute mb-24 h-[238px] w-[162px] self-end "
       />
       <Image
         source={Tringle}
-        className="absolute w-[82px] h-[160px] top-[380px]"
+        className="absolute top-[380px] h-[160px] w-[82px]"
       />
       <View className="mt-28 justify-center">
         <Text
-          className="text-eggwhite self-center"
-          style={{ fontFamily: "ClashGrotesk-Medium", fontSize: 48 }}>
+          className="self-center text-eggwhite"
+          style={{ fontFamily: "ClashGrotesk-Medium", fontSize: 48 }}
+        >
           Sign up
         </Text>
         <Text
-          className="text-eggwhite self-center mt-1"
-          style={{ fontFamily: "ClashGrotesk-Regular", fontSize: 18 }}>
+          className="mt-1 self-center text-eggwhite"
+          style={{ fontFamily: "ClashGrotesk-Regular", fontSize: 18 }}
+        >
           Thank you for signing up to Lumidusk! {":)"}
         </Text>
         <View className="form my-8 justify-center space-y-2">
           <View>
             <Text
-              className="text-eggwhite ml-8"
-              style={{ fontFamily: "ClashGrotesk-Regular", fontSize: 20 }}>
+              className="ml-8 text-eggwhite"
+              style={{ fontFamily: "ClashGrotesk-Regular", fontSize: 20 }}
+            >
               Email
             </Text>
             <TextInput
-              className={`rounded-3xl mx-8 my-1 h-12 py-1 px-4 ${
+              className={`mx-8 my-1 h-12 rounded-3xl px-4 py-1 ${
                 validEmail || !email ? "bg-[#E8E6EA]" : "bg-[#f9e3e3]"
               }`}
               style={{ fontFamily: "Satoshi-Regular", fontSize: 18 }}
@@ -108,12 +111,13 @@ const SignUp = ({ navigation }: SignUpProps) => {
           </View>
           <View>
             <Text
-              className="text-eggwhite ml-8"
-              style={{ fontFamily: "ClashGrotesk-Regular", fontSize: 20 }}>
+              className="ml-8 text-eggwhite"
+              style={{ fontFamily: "ClashGrotesk-Regular", fontSize: 20 }}
+            >
               Password
             </Text>
             <TextInput
-              className={`rounded-3xl mx-8 my-1 h-12 py-1 px-4 ${
+              className={`mx-8 my-1 h-12 rounded-3xl px-4 py-1 ${
                 validPassword || !password ? "bg-[#E8E6EA]" : "bg-[#f9e3e3]"
               }`}
               style={{ fontFamily: "Satoshi-Regular", fontSize: 18 }}
@@ -125,10 +129,11 @@ const SignUp = ({ navigation }: SignUpProps) => {
               value={password}
             />
             <CollapsibleContainer expanded={focusPassword && !validPassword}>
-              <View className="bg-[#f9e3e3] rounded-2xl mx-8 my-2 py-2 px-4 ">
+              <View className="mx-8 my-2 rounded-2xl bg-[#f9e3e3] px-4 py-2 ">
                 <Text
                   className="text-egggrey"
-                  style={{ fontFamily: "Satoshi-Medium", fontSize: 15 }}>
+                  style={{ fontFamily: "Satoshi-Medium", fontSize: 15 }}
+                >
                   8 to 24 characters. Must include uppercase and lowercase
                   letters, a number and a special character.{"\n"}Allowed
                   special characters: ! & @ # $ %
@@ -138,12 +143,13 @@ const SignUp = ({ navigation }: SignUpProps) => {
           </View>
           <View>
             <Text
-              className="text-eggwhite ml-8"
-              style={{ fontFamily: "ClashGrotesk-Regular", fontSize: 20 }}>
+              className="ml-8 text-eggwhite"
+              style={{ fontFamily: "ClashGrotesk-Regular", fontSize: 20 }}
+            >
               Re-Enter Password
             </Text>
             <TextInput
-              className={`rounded-3xl mx-8 my-1 h-12 py-1 px-4 ${
+              className={`mx-8 my-1 h-12 rounded-3xl px-4 py-1 ${
                 validMatch || !matchPassword ? "bg-[#E8E6EA]" : "bg-[#f9e3e3]"
               }`}
               style={{ fontFamily: "Satoshi-Regular", fontSize: 18 }}
@@ -157,47 +163,54 @@ const SignUp = ({ navigation }: SignUpProps) => {
       </View>
       <View className="flex-1 items-center space-y-6">
         <TouchableOpacity
-          className="justify-center items-center w-[260px] h-[60px] bg-eggorange rounded-3xl shadow-eggorange"
+          className="h-[60px] w-[260px] items-center justify-center rounded-3xl bg-eggorange shadow-eggorange"
           style={styles.shadowButton}
-          onPress={() => handleSignUp()}>
+          onPress={() => handleSignUp()}
+        >
           <Text
             className="text-grey"
-            style={{ fontFamily: "Satoshi-Bold", fontSize: 20 }}>
+            style={{ fontFamily: "Satoshi-Bold", fontSize: 20 }}
+          >
             Sign up
           </Text>
         </TouchableOpacity>
         <Image source={Line} />
         <TouchableOpacity
-          className="justify-center items-center w-[260px] h-[60px] bg-[#F3F2F3] rounded-3xl"
-          onPress={() => Alert.alert("uhh... not done yet soz")}>
+          className="h-[60px] w-[260px] items-center justify-center rounded-3xl bg-[#F3F2F3]"
+          onPress={() => Alert.alert("uhh... not done yet soz")}
+        >
           <View className="flex flex-row space-x-2">
-            <Image source={Google} className="w-[29px] h-[29px]" />
+            <Image source={Google} className="h-[29px] w-[29px]" />
             <Text
               className="text-grey"
-              style={{ fontFamily: "Satoshi-Regular", fontSize: 20 }}>
+              style={{ fontFamily: "Satoshi-Regular", fontSize: 20 }}
+            >
               Sign Up with Google
             </Text>
           </View>
         </TouchableOpacity>
-        <View className="relative text-center top-4 space-y-2">
+        <View className="relative top-4 space-y-2 text-center">
           <View className="flex flex-row space-x-1">
             <Text
               className="text-egglightgrey"
-              style={{ fontFamily: "Satoshi-Bold", fontSize: 16 }}>
+              style={{ fontFamily: "Satoshi-Bold", fontSize: 16 }}
+            >
               Already have an account?
             </Text>
             <TouchableOpacity onPress={() => navigation.navigate("Login")}>
               <Text
                 className="text-[#C9A7E3]"
-                style={{ fontFamily: "Satoshi-Bold", fontSize: 16 }}>
+                style={{ fontFamily: "Satoshi-Bold", fontSize: 16 }}
+              >
                 Log in
               </Text>
             </TouchableOpacity>
           </View>
           <TouchableOpacity onPress={() => navigation.navigate("Home")}>
             <Text
-              className="text-egglightgrey self-center"
-              style={{ fontFamily: "Satoshi-Bold", fontSize: 16 }}>
+              className="self-center text-egglightgrey"
+              style={{ fontFamily: "Satoshi-Bold", fontSize: 16 }}
+            >
               continue as guest
             </Text>
           </TouchableOpacity>

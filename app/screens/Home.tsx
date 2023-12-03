@@ -39,47 +39,53 @@ const Home = ({ navigation }: HomeProps) => {
     <SafeAreaView className="flex-1 bg-eggblack">
       <Image
         source={Bonk}
-        className="absolute w-[100px] h-[275px] top-[100px] self-end"
+        className="absolute top-[100px] h-[275px] w-[100px] self-end"
       />
       <Image
         source={Bink}
-        className="absolute w-[300px] h-[400px] top-[350px]"
+        className="absolute top-[350px] h-[400px] w-[300px]"
       />
       <View className="mt-16">
         <View className="ml-6">
           <Text
             className="text-eggwhite"
-            style={{ fontFamily: "ClashGrotesk-Medium", fontSize: 48 }}>
+            style={{ fontFamily: "ClashGrotesk-Medium", fontSize: 48 }}
+          >
             {currentDay} {" :)"}
           </Text>
           <Text
             className="text-eggwhite"
-            style={{ fontFamily: "ClashGrotesk-Light", fontSize: 24 }}>
+            style={{ fontFamily: "ClashGrotesk-Light", fontSize: 24 }}
+          >
             {currentDate}
           </Text>
         </View>
         <Box boxName="my-6 mx-5">
           <Text
             className="text-eggwhite"
-            style={{ fontFamily: "Satoshi-Regular", fontSize: 24 }}>
+            style={{ fontFamily: "Satoshi-Regular", fontSize: 24 }}
+          >
             {quote}
           </Text>
           <Text
-            className="text-[#B4A5A1] self-end"
-            style={{ fontFamily: "Satoshi-Medium", fontSize: 14 }}>
+            className="self-end text-[#B4A5A1]"
+            style={{ fontFamily: "Satoshi-Medium", fontSize: 14 }}
+          >
             Jonathan Yun - 2021
           </Text>
         </Box>
       </View>
       <CalendarComponent />
-      <View className="flex-1 items-center mt-12 space-y-6">
+      <View className="mt-12 flex-1 items-center space-y-6">
         <TouchableOpacity
-          className="justify-center items-center w-[260px] h-[60px] bg-eggorange rounded-3xl shadow-eggorange"
+          className="h-[60px] w-[260px] items-center justify-center rounded-3xl bg-eggorange shadow-eggorange"
           style={styles.shadowButton}
-          onPress={() => navigation.navigate("SignUp")}>
+          onPress={() => navigation.navigate("SignUp")}
+        >
           <Text
             className="text-grey"
-            style={{ fontFamily: "Satoshi-Bold", fontSize: 20 }}>
+            style={{ fontFamily: "Satoshi-Bold", fontSize: 20 }}
+          >
             Start Today's Journaling
           </Text>
         </TouchableOpacity>

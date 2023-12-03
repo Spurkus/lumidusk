@@ -25,48 +25,54 @@ const WelcomeScreen = ({ navigation }: WelcomeScreenProps) => {
       <View className="mt-16">
         <Image
           source={Crystal}
-          className="absolute w-[138px] h-[162px] self-end mb-24 "
+          className="absolute mb-24 h-[162px] w-[138px] self-end "
         />
         <Text
-          className="text-eggwhite mt-10 ml-8"
-          style={{ fontFamily: "ClashGrotesk-Regular", fontSize: 48 }}>
+          className="ml-8 mt-10 text-eggwhite"
+          style={{ fontFamily: "ClashGrotesk-Regular", fontSize: 48 }}
+        >
           Welcome to
         </Text>
         <Text
-          className="text-eggwhite ml-8"
-          style={{ fontFamily: "ClashGrotesk-Medium", fontSize: 48 }}>
+          className="ml-8 text-eggwhite"
+          style={{ fontFamily: "ClashGrotesk-Medium", fontSize: 48 }}
+        >
           Lumidusk
         </Text>
         <Text
-          className="text-eggwhite mt-8 mr-8 text-right self-end w-[350px]"
-          style={{ fontFamily: "ClashGrotesk-Regular", fontSize: 20 }}>
+          className="mr-8 mt-8 w-[350px] self-end text-right text-eggwhite"
+          style={{ fontFamily: "ClashGrotesk-Regular", fontSize: 20 }}
+        >
           your personal sanctuary for nothing each day, one emotion at a time{" "}
           {":)"}
         </Text>
         <Image
-          className="absolute w-[140px] h-[150px] mt-[220px]"
+          className="absolute mt-[220px] h-[150px] w-[140px]"
           source={Flower}
         />
         <Image
-          className="self-end mt-24 mb-12 mr-4 w-[178px] h-[222px]"
+          className="mb-12 mr-4 mt-24 h-[222px] w-[178px] self-end"
           source={Penguin}
         />
       </View>
       <View className="flex-1 items-center space-y-6">
         <TouchableOpacity
-          className="justify-center items-center w-[260px] h-[60px] bg-eggorange rounded-3xl shadow-eggorange"
+          className="h-[60px] w-[260px] items-center justify-center rounded-3xl bg-eggorange shadow-eggorange"
           style={styles.shadowButton}
-          onPress={() => navigation.navigate("SignUp")}>
+          onPress={() => navigation.navigate("SignUp")}
+        >
           <Text
             className="text-grey"
-            style={{ fontFamily: "Satoshi-Bold", fontSize: 20 }}>
+            style={{ fontFamily: "Satoshi-Bold", fontSize: 20 }}
+          >
             Get Started
           </Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate("Home")}>
           <Text
             className="text-egglightgrey"
-            style={{ fontFamily: "Satoshi-Bold", fontSize: 16 }}>
+            style={{ fontFamily: "Satoshi-Bold", fontSize: 16 }}
+          >
             continue as guest
           </Text>
         </TouchableOpacity>

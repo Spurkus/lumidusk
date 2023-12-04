@@ -8,9 +8,11 @@ import {
   Image,
   TouchableOpacity,
   StyleSheet,
-  Alert,
   TextInput,
 } from "react-native";
+import { auth } from "../config/firebaseConfig";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { FirebaseError } from "firebase/app";
 
 import Blob from "../assets/blob.png";
 import Tringle from "../assets/tringle.png";
@@ -55,24 +57,29 @@ const SignUp = ({ navigation }: SignUpProps) => {
 
   useEffect(() => {
     setValidMatch(matchPassword == password);
-  }, [matchPassword]);
+  }, [matchPassword, password]);
 
   // Sign up confirmation
-  const handleSignUp = () => {
+  const handleSignUp = async () => {
     if (!validEmail || !validPassword || !validMatch) {
-      Alert.alert(
-        "Well something went wrong...",
-        (validEmail ? "" : "Please put in the correct email format :)") +
-          (validPassword ? "" : "\nDid you follow the password format?") +
-          (validMatch ? "" : "\nMake sure that the password matches!!"),
-      );
       return;
     }
 
-    Alert.alert(
-      "Sign up has not been implemented yet >.<",
-      "thanks for understanding :3",
-    );
+    try {
+      const user = await createUserWithEmailAndPassword(auth, email, password);
+      setModalTitle("Sign Up Success!!");
+      setModalText("Thank you for signing up, things will start get better :)");
+    } catch (error: FirebaseError | unknown) {
+      setModalTitle("Error");
+      if (!(error instanceof FirebaseError)) {
+        setModalText("Sign up error");
+      } else if (error.code === "auth/email-already-in-use") {
+        setModalText("Email already in use. Please choose a different email.");
+      } else {
+        setModalText("Sign up error: " + error.message);
+      }
+    }
+    setModalVisible(true);
   };
 
   return (
@@ -178,13 +185,26 @@ const SignUp = ({ navigation }: SignUpProps) => {
       </View>
       <View className="flex-1 items-center space-y-6">
         <TouchableOpacity
-          className="h-[60px] w-[260px] items-center justify-center rounded-3xl bg-eggorange shadow-eggorange"
+          className={`h-[60px] w-[260px] items-center justify-center rounded-3xl ${
+            validEmail && validPassword && validMatch
+              ? "bg-eggorange shadow-eggorange"
+              : "bg-egglightgrey shadow-egglightgrey"
+          }`}
+          disabled={!validEmail || !validPassword || !validMatch}
           style={styles.shadowButton}
           onPress={() => handleSignUp()}
         >
           <Text
-            className="text-grey"
-            style={{ fontFamily: "Satoshi-Bold", fontSize: 20 }}
+            className={`${
+              validEmail && validPassword && validMatch
+                ? "text-grey"
+                : "text-eggwhite"
+            }`}
+            style={
+              validEmail && validPassword && validMatch
+                ? { fontFamily: "Satoshi-Bold", fontSize: 20 }
+                : { fontFamily: "Satoshi-Regular", fontSize: 20 }
+            }
           >
             Sign up
           </Text>

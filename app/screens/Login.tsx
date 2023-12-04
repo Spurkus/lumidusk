@@ -11,11 +11,15 @@ import {
   Alert,
   TextInput,
 } from "react-native";
+import { auth } from "../config/firebaseConfig";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { FirebaseError } from "firebase/app";
 
 import Blob from "../assets/blob.png";
 import Tringle from "../assets/tringle.png";
 import Line from "../assets/line.png";
 import Google from "../assets/google.png";
+import ModalComponent from "../components/ModalComponent";
 
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const PASSWORD_REGEX =
@@ -30,6 +34,14 @@ const Login = ({ navigation }: LoginProps) => {
   const [password, setPassword] = useState("");
   const [validPassword, setValidPassword] = useState(false);
 
+  const [modalTitle, setModalTitle] = useState("");
+  const [modalText, setModalText] = useState("");
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const toggleModal = () => {
+    setModalVisible(!modalVisible);
+  };
+
   // Testing the validity of inputs
   useEffect(() => {
     setValidEmail(EMAIL_REGEX.test(email));
@@ -40,24 +52,42 @@ const Login = ({ navigation }: LoginProps) => {
   }, [password]);
 
   // Sign up confirmation
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!validEmail || !validPassword) {
-      Alert.alert(
-        "Well something went wrong...",
-        (validEmail ? "" : "Please put in the correct email format :)") +
-          (validPassword ? "" : "\nDid you follow the password format?"),
-      );
       return;
     }
 
-    Alert.alert(
-      "Sign up has not been implemented yet >.<",
-      "thanks for understanding :3",
-    );
+    try {
+      const user = await signInWithEmailAndPassword(auth, email, password);
+      setModalTitle("Login Success!!");
+      setModalText("Welcome back to lumidusk, things will start get better :)");
+    } catch (error: FirebaseError | unknown) {
+      setModalTitle("Error");
+      if (!(error instanceof FirebaseError)) {
+        setModalText("Login error");
+      } else if (error.code === "auth/user-notfound") {
+        setModalText("Invalid email used. Please try again");
+      } else if (error.code === "auth/wrong-password") {
+        setModalText("Incorrect password. Please try again");
+      } else if (error.code === "auth/too-many-requests") {
+        setModalText(
+          "Too many unsuccessful login attempts. Please try again later.",
+        );
+      } else {
+        setModalText("Sign up error: " + error.message);
+      }
+    }
+    setModalVisible(true);
   };
 
   return (
     <SafeAreaView className="flex-1 bg-eggblack">
+      <ModalComponent
+        title={modalTitle}
+        text={modalText}
+        visible={modalVisible}
+        toggleModal={toggleModal}
+      />
       <Image
         source={Blob}
         className="absolute mb-24 h-[238px] w-[162px] self-end "
@@ -127,13 +157,24 @@ const Login = ({ navigation }: LoginProps) => {
       </View>
       <View className="flex-1 items-center space-y-6">
         <TouchableOpacity
-          className="h-[60px] w-[260px] items-center justify-center rounded-3xl bg-eggorange shadow-eggorange"
+          className={`h-[60px] w-[260px] items-center justify-center rounded-3xl ${
+            validEmail && validPassword
+              ? "bg-eggorange shadow-eggorange"
+              : "bg-egglightgrey shadow-egglightgrey"
+          }`}
+          disabled={!validEmail || !validPassword}
           style={styles.shadowButton}
           onPress={() => handleLogin()}
         >
           <Text
-            className="text-grey"
-            style={{ fontFamily: "Satoshi-Bold", fontSize: 20 }}
+            className={`${
+              validEmail && validPassword ? "text-grey" : "text-eggwhite"
+            }`}
+            style={
+              validEmail && validPassword
+                ? { fontFamily: "Satoshi-Bold", fontSize: 20 }
+                : { fontFamily: "Satoshi-Regular", fontSize: 20 }
+            }
           >
             Login
           </Text>
@@ -141,7 +182,11 @@ const Login = ({ navigation }: LoginProps) => {
         <Image source={Line} />
         <TouchableOpacity
           className="h-[60px] w-[260px] items-center justify-center rounded-3xl bg-[#F3F2F3]"
-          onPress={() => Alert.alert("uhh... not done yet soz")}
+          onPress={() => {
+            setModalTitle("Uhhh");
+            setModalText("Not implemented yet :/");
+            setModalVisible(true);
+          }}
         >
           <View className="flex flex-row space-x-2">
             <Image source={Google} className="h-[29px] w-[29px]" />

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../../App";
+import { RootStackParamList } from "../../Routes";
 import {
   Text,
   View,
@@ -10,11 +10,7 @@ import {
   StyleSheet,
 } from "react-native";
 import { auth } from "../config/firebaseConfig";
-import {
-  createUserWithEmailAndPassword,
-  signOut,
-  updateProfile,
-} from "firebase/auth";
+import { signOut } from "firebase/auth";
 import { FirebaseError } from "firebase/app";
 import { useFirebaseAuth } from "../context/AuthContext";
 

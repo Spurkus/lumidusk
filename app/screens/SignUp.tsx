@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../../App";
+import { RootStackParamList } from "../../Routes";
 import {
   Text,
   View,

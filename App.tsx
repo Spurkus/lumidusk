@@ -3,26 +3,9 @@ import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 
 import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-
-import WelcomeScreen from "./app/screens/WelcomeScreen";
-import SignUp from "./app/screens/SignUp";
-import Login from "./app/screens/Login";
-import Home from "./app/screens/Home";
-import {
-  useFirebaseAuth,
-  FirebaseAuthProvider,
-} from "./app/context/AuthContext";
-
-export type RootStackParamList = {
-  WelcomeScreen: undefined;
-  SignUp: undefined;
-  Login: undefined;
-  Home: undefined;
-};
-
+import Routes from "./Routes";
+import { FirebaseAuthProvider } from "./app/context/AuthContext";
 export default function App() {
-  const user = useFirebaseAuth();
   // Loading fonts
   const [fontsLoaded, fontError] = useFonts({
     "ClashGrotesk-Bold": require("./app/assets/fonts/ClashGrotesk-Bold.otf"),
@@ -53,23 +36,10 @@ export default function App() {
     return null;
   }
 
-  // Create Navigation Stack
-  const RootStack = createNativeStackNavigator<RootStackParamList>();
-
   return (
     <NavigationContainer>
       <FirebaseAuthProvider>
-        <RootStack.Navigator
-          initialRouteName={user ? "Home" : "WelcomeScreen"}
-          screenOptions={{
-            headerShown: false,
-          }}
-        >
-          <RootStack.Screen name="WelcomeScreen" component={WelcomeScreen} />
-          <RootStack.Screen name="SignUp" component={SignUp} />
-          <RootStack.Screen name="Login" component={Login} />
-          <RootStack.Screen name="Home" component={Home} />
-        </RootStack.Navigator>
+        <Routes />
       </FirebaseAuthProvider>
     </NavigationContainer>
   );

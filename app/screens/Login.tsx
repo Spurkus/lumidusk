@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../../App";
+import { RootStackParamList } from "../../Routes";
 import {
   Text,
   View,
@@ -8,7 +8,6 @@ import {
   Image,
   TouchableOpacity,
   StyleSheet,
-  Alert,
   TextInput,
 } from "react-native";
 import { auth } from "../config/firebaseConfig";
@@ -64,7 +63,7 @@ const Login = ({ navigation }: LoginProps) => {
     }
 
     try {
-      const user = await signInWithEmailAndPassword(auth, email, password);
+      await signInWithEmailAndPassword(auth, email, password);
       setModalTitle("Login Success!!");
       setModalText("Welcome back to lumidusk, things will start get better :)");
       setModalHeight(200);
@@ -101,7 +100,7 @@ const Login = ({ navigation }: LoginProps) => {
         buttonFunction={() => {
           if (user) {
             toggleModal();
-            navigation.replace("Home");
+            navigation.navigate("Home");
           } else {
             toggleModal();
           }

@@ -9,6 +9,10 @@ import WelcomeScreen from "./app/screens/WelcomeScreen";
 import SignUp from "./app/screens/SignUp";
 import Login from "./app/screens/Login";
 import Home from "./app/screens/Home";
+import {
+  useFirebaseAuth,
+  FirebaseAuthProvider,
+} from "./app/context/AuthContext";
 
 export type RootStackParamList = {
   WelcomeScreen: undefined;
@@ -18,6 +22,7 @@ export type RootStackParamList = {
 };
 
 export default function App() {
+  const user = useFirebaseAuth();
   // Loading fonts
   const [fontsLoaded, fontError] = useFonts({
     "ClashGrotesk-Bold": require("./app/assets/fonts/ClashGrotesk-Bold.otf"),
@@ -53,15 +58,19 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <RootStack.Navigator
-        screenOptions={{
-          headerShown: false,
-        }}>
-        <RootStack.Screen name="WelcomeScreen" component={WelcomeScreen} />
-        <RootStack.Screen name="SignUp" component={SignUp} />
-        <RootStack.Screen name="Login" component={Login} />
-        <RootStack.Screen name="Home" component={Home} />
-      </RootStack.Navigator>
+      <FirebaseAuthProvider>
+        <RootStack.Navigator
+          initialRouteName={user ? "Home" : "WelcomeScreen"}
+          screenOptions={{
+            headerShown: false,
+          }}
+        >
+          <RootStack.Screen name="WelcomeScreen" component={WelcomeScreen} />
+          <RootStack.Screen name="SignUp" component={SignUp} />
+          <RootStack.Screen name="Login" component={Login} />
+          <RootStack.Screen name="Home" component={Home} />
+        </RootStack.Navigator>
+      </FirebaseAuthProvider>
     </NavigationContainer>
   );
 }

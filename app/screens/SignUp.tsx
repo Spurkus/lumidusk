@@ -11,8 +11,9 @@ import {
   TextInput,
 } from "react-native";
 import { auth } from "../config/firebaseConfig";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { FirebaseError } from "firebase/app";
+import { useFirebaseAuth } from "../context/AuthContext";
 
 import Blob from "../assets/blob.png";
 import Tringle from "../assets/tringle.png";
@@ -21,6 +22,7 @@ import Google from "../assets/google.png";
 import CollapsibleContainer from "../components/CollapsibleComponent";
 import ModalComponent from "../components/ModalComponent";
 
+const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const PASSWORD_REGEX =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!&@#$%]).{8,24}$/;
@@ -28,6 +30,11 @@ const PASSWORD_REGEX =
 type SignUpProps = NativeStackScreenProps<RootStackParamList, "SignUp">;
 
 const SignUp = ({ navigation }: SignUpProps) => {
+  const user = useFirebaseAuth();
+
+  const [username, setUsername] = useState("");
+  const [validUsername, setValidUsername] = useState(false);
+
   const [email, setEmail] = useState("");
   const [validEmail, setValidEmail] = useState(false);
 
@@ -38,8 +45,11 @@ const SignUp = ({ navigation }: SignUpProps) => {
   const [matchPassword, setMatchPassword] = useState("");
   const [validMatch, setValidMatch] = useState(false);
 
+  // Modal Component
   const [modalTitle, setModalTitle] = useState("");
   const [modalText, setModalText] = useState("");
+  const [modalHeight, setModalHeight] = useState(1);
+  const [modalButton, setModalButton] = useState("Close");
   const [modalVisible, setModalVisible] = useState(false);
 
   const toggleModal = () => {
@@ -47,6 +57,10 @@ const SignUp = ({ navigation }: SignUpProps) => {
   };
 
   // Testing the validity of inputs
+  useEffect(() => {
+    setValidUsername(USER_REGEX.test(username));
+  }, [username]);
+
   useEffect(() => {
     setValidEmail(EMAIL_REGEX.test(email));
   }, [email]);
@@ -61,16 +75,25 @@ const SignUp = ({ navigation }: SignUpProps) => {
 
   // Sign up confirmation
   const handleSignUp = async () => {
-    if (!validEmail || !validPassword || !validMatch) {
+    if (!username || !validEmail || !validPassword || !validMatch) {
       return;
     }
 
     try {
-      const user = await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password,
+      );
+      await updateProfile(userCredential.user, { displayName: username });
       setModalTitle("Sign Up Success!!");
       setModalText("Thank you for signing up, things will start get better :)");
+      setModalHeight(200);
+      setModalButton("Continue");
     } catch (error: FirebaseError | unknown) {
       setModalTitle("Error");
+      setModalHeight(250);
+      setModalButton("Close");
       if (!(error instanceof FirebaseError)) {
         setModalText("Sign up error");
       } else if (error.code === "auth/email-already-in-use") {
@@ -87,7 +110,17 @@ const SignUp = ({ navigation }: SignUpProps) => {
       <ModalComponent
         title={modalTitle}
         text={modalText}
+        height={modalHeight}
         visible={modalVisible}
+        button={modalButton}
+        buttonFunction={() => {
+          if (user) {
+            toggleModal();
+            navigation.replace("Home");
+          } else {
+            toggleModal();
+          }
+        }}
         toggleModal={toggleModal}
       />
       <Image
@@ -98,7 +131,7 @@ const SignUp = ({ navigation }: SignUpProps) => {
         source={Tringle}
         className="absolute top-[380px] h-[160px] w-[82px]"
       />
-      <View className="mt-28 justify-center">
+      <View className="mt-24 justify-center">
         <Text
           className="self-center text-eggwhite"
           style={{ fontFamily: "ClashGrotesk-Medium", fontSize: 48 }}
@@ -111,7 +144,24 @@ const SignUp = ({ navigation }: SignUpProps) => {
         >
           Thank you for signing up to Lumidusk! {":)"}
         </Text>
-        <View className="form my-8 justify-center space-y-2">
+        <View className="form my-5 justify-center space-y-2">
+          <View>
+            <Text
+              className="ml-8 text-eggwhite"
+              style={{ fontFamily: "ClashGrotesk-Regular", fontSize: 20 }}
+            >
+              Username
+            </Text>
+            <TextInput
+              className={`mx-8 my-1 h-12 rounded-3xl px-4 py-1 ${
+                validUsername || !username ? "bg-[#E8E6EA]" : "bg-[#f9e3e3]"
+              }`}
+              style={{ fontFamily: "Satoshi-Regular", fontSize: 18 }}
+              placeholder="watergirl206"
+              onChangeText={(text) => setUsername(text)}
+              value={username}
+            />
+          </View>
           <View>
             <Text
               className="ml-8 text-eggwhite"
@@ -214,7 +264,9 @@ const SignUp = ({ navigation }: SignUpProps) => {
           className="h-[60px] w-[260px] items-center justify-center rounded-3xl bg-[#F3F2F3]"
           onPress={() => {
             setModalTitle("Uhhh");
+            setModalHeight(200);
             setModalText("Not implemented yet :/");
+            setModalButton("Close");
             setModalVisible(true);
           }}
         >
@@ -228,7 +280,7 @@ const SignUp = ({ navigation }: SignUpProps) => {
             </Text>
           </View>
         </TouchableOpacity>
-        <View className="relative top-4 space-y-2 text-center">
+        <View className="relative space-y-2 text-center">
           <View className="flex flex-row space-x-1">
             <Text
               className="text-egglightgrey"
@@ -236,7 +288,7 @@ const SignUp = ({ navigation }: SignUpProps) => {
             >
               Already have an account?
             </Text>
-            <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+            <TouchableOpacity onPress={() => navigation.replace("Login")}>
               <Text
                 className="text-[#C9A7E3]"
                 style={{ fontFamily: "Satoshi-Bold", fontSize: 16 }}
@@ -245,7 +297,7 @@ const SignUp = ({ navigation }: SignUpProps) => {
               </Text>
             </TouchableOpacity>
           </View>
-          <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+          <TouchableOpacity onPress={() => navigation.replace("Home")}>
             <Text
               className="self-center text-egglightgrey"
               style={{ fontFamily: "Satoshi-Bold", fontSize: 16 }}

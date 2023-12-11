@@ -9,6 +9,14 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from "react-native";
+import { auth } from "../config/firebaseConfig";
+import {
+  createUserWithEmailAndPassword,
+  signOut,
+  updateProfile,
+} from "firebase/auth";
+import { FirebaseError } from "firebase/app";
+import { useFirebaseAuth } from "../context/AuthContext";
 
 import Box from "../components/Box";
 import CalendarComponent from "../components/CalendarComponent";
@@ -36,9 +44,14 @@ const currentDate = date.toLocaleDateString();
 const quote = '"remember to be kind to yourself"';
 
 const Home = ({ navigation }: HomeProps) => {
+  const user = useFirebaseAuth();
   const [buttonMessage, setButtonMessage] = useState(
     "Start Today's Journaling",
   );
+
+  const handleSignOut = async () => {
+    await signOut(auth);
+  };
   return (
     <SafeAreaView className="flex-1 bg-eggblack">
       <Image
@@ -49,6 +62,22 @@ const Home = ({ navigation }: HomeProps) => {
         source={Bink}
         className="absolute top-[350px] h-[400px] w-[300px]"
       />
+      <View className="absolute right-4 top-16 self-end">
+        <TouchableOpacity
+          className="h-[45px] items-center justify-center rounded-3xl bg-egglightorage px-4 shadow-eggorange"
+          onPress={() => {
+            handleSignOut();
+            navigation.replace("WelcomeScreen");
+          }}
+        >
+          <Text
+            className="text-grey"
+            style={{ fontFamily: "Satoshi-Bold", fontSize: 20 }}
+          >
+            Sign out
+          </Text>
+        </TouchableOpacity>
+      </View>
       <View className="mt-16">
         <View className="ml-6">
           <Text
@@ -61,7 +90,7 @@ const Home = ({ navigation }: HomeProps) => {
             className="text-eggwhite"
             style={{ fontFamily: "ClashGrotesk-Light", fontSize: 24 }}
           >
-            {currentDate}
+            {currentDate} {user?.displayName}
           </Text>
         </View>
         <Box boxName="my-6 mx-5">

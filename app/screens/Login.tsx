@@ -14,6 +14,7 @@ import {
 import { auth } from "../config/firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { FirebaseError } from "firebase/app";
+import { useFirebaseAuth } from "../context/AuthContext";
 
 import Blob from "../assets/blob.png";
 import Tringle from "../assets/tringle.png";
@@ -28,14 +29,19 @@ const PASSWORD_REGEX =
 type LoginProps = NativeStackScreenProps<RootStackParamList, "Login">;
 
 const Login = ({ navigation }: LoginProps) => {
+  const user = useFirebaseAuth();
+
   const [email, setEmail] = useState("");
   const [validEmail, setValidEmail] = useState(false);
 
   const [password, setPassword] = useState("");
   const [validPassword, setValidPassword] = useState(false);
 
+  // Modal Component
   const [modalTitle, setModalTitle] = useState("");
   const [modalText, setModalText] = useState("");
+  const [modalHeight, setModalHeight] = useState(1);
+  const [modalButton, setModalButton] = useState("Close");
   const [modalVisible, setModalVisible] = useState(false);
 
   const toggleModal = () => {
@@ -61,8 +67,12 @@ const Login = ({ navigation }: LoginProps) => {
       const user = await signInWithEmailAndPassword(auth, email, password);
       setModalTitle("Login Success!!");
       setModalText("Welcome back to lumidusk, things will start get better :)");
+      setModalHeight(200);
+      setModalButton("Continue");
     } catch (error: FirebaseError | unknown) {
       setModalTitle("Error");
+      setModalHeight(250);
+      setModalButton("Close");
       if (!(error instanceof FirebaseError)) {
         setModalText("Login error");
       } else if (error.code === "auth/user-notfound") {
@@ -85,7 +95,17 @@ const Login = ({ navigation }: LoginProps) => {
       <ModalComponent
         title={modalTitle}
         text={modalText}
+        height={modalHeight}
         visible={modalVisible}
+        button={modalButton}
+        buttonFunction={() => {
+          if (user) {
+            toggleModal();
+            navigation.replace("Home");
+          } else {
+            toggleModal();
+          }
+        }}
         toggleModal={toggleModal}
       />
       <Image
@@ -185,6 +205,8 @@ const Login = ({ navigation }: LoginProps) => {
           onPress={() => {
             setModalTitle("Uhhh");
             setModalText("Not implemented yet :/");
+            setModalHeight(200);
+            setModalButton("Close");
             setModalVisible(true);
           }}
         >
@@ -206,7 +228,7 @@ const Login = ({ navigation }: LoginProps) => {
             >
               Don't have an account?
             </Text>
-            <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
+            <TouchableOpacity onPress={() => navigation.replace("SignUp")}>
               <Text
                 className="text-[#C9A7E3]"
                 style={{ fontFamily: "Satoshi-Bold", fontSize: 16 }}
@@ -215,7 +237,7 @@ const Login = ({ navigation }: LoginProps) => {
               </Text>
             </TouchableOpacity>
           </View>
-          <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+          <TouchableOpacity onPress={() => navigation.replace("Home")}>
             <Text
               className="self-center text-egglightgrey"
               style={{ fontFamily: "Satoshi-Bold", fontSize: 16 }}

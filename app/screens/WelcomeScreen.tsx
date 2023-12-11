@@ -59,7 +59,7 @@ const WelcomeScreen = ({ navigation }: WelcomeScreenProps) => {
         <TouchableOpacity
           className="h-[60px] w-[260px] items-center justify-center rounded-3xl bg-eggorange shadow-eggorange"
           style={styles.shadowButton}
-          onPress={() => navigation.navigate("SignUp")}
+          onPress={() => navigation.replace("SignUp")}
         >
           <Text
             className="text-grey"
@@ -68,7 +68,7 @@ const WelcomeScreen = ({ navigation }: WelcomeScreenProps) => {
             Get Started
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+        <TouchableOpacity onPress={() => navigation.replace("Home")}>
           <Text
             className="text-egglightgrey"
             style={{ fontFamily: "Satoshi-Bold", fontSize: 16 }}

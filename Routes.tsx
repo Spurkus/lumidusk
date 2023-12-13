@@ -32,6 +32,7 @@ const Routes = () => {
       initialRouteName={user ? "Home" : "WelcomeScreen"}
       screenOptions={{
         headerShown: false,
+        gestureEnabled: false,
       }}
     >
       <RootStack.Screen name="WelcomeScreen" component={WelcomeScreen} />

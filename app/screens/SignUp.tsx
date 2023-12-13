@@ -116,7 +116,7 @@ const SignUp = ({ navigation }: SignUpProps) => {
         buttonFunction={() => {
           if (user) {
             toggleModal();
-            navigation.replace("Home");
+            navigation.navigate("Home");
           } else {
             toggleModal();
           }

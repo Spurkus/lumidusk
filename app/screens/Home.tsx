@@ -11,7 +11,6 @@ import {
 } from "react-native";
 import { auth } from "../config/firebaseConfig";
 import { signOut } from "firebase/auth";
-import { FirebaseError } from "firebase/app";
 import { useFirebaseAuth } from "../context/AuthContext";
 
 import Box from "../components/Box";

@@ -12,6 +12,7 @@ import {
 import { auth } from "../config/firebaseConfig";
 import { signOut } from "firebase/auth";
 import { useFirebaseAuth } from "../context/AuthContext";
+import ModalComponent from "../components/ModalComponent";
 
 import Box from "../components/Box";
 import CalendarComponent from "../components/CalendarComponent";
@@ -44,11 +45,53 @@ const Home = ({ navigation }: HomeProps) => {
     "Start Today's Journaling",
   );
 
-  const handleSignOut = async () => {
-    await signOut(auth);
+  // Modal Component
+  const [modalTitle, setModalTitle] = useState("");
+  const [modalText, setModalText] = useState("");
+  const [modalHeight, setModalHeight] = useState(1);
+  const [modalButtons, setModalButtons] = useState([
+    {
+      label: "Close",
+      onPress: () => {},
+    },
+  ]);
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const toggleModal = () => {
+    setModalVisible(!modalVisible);
   };
+
+  const handleSignOut = () => {
+    setModalTitle("Sign Out Confirmation");
+    setModalText("Your notes won't be available until you sign back in");
+    setModalHeight(240);
+    setModalButtons([
+      {
+        label: "Cancel",
+        onPress: () => setModalVisible(false),
+      },
+      {
+        label: "Confirm",
+        onPress: async () => {
+          setModalVisible(false);
+          await signOut(auth);
+          navigation.navigate("WelcomeScreen");
+        },
+      },
+    ]);
+    toggleModal();
+  };
+
   return (
     <SafeAreaView className="flex-1 bg-eggblack">
+      <ModalComponent
+        title={modalTitle}
+        text={modalText}
+        height={modalHeight}
+        visible={modalVisible}
+        buttons={modalButtons}
+        toggleModal={toggleModal}
+      />
       <Image
         source={Bonk}
         className="absolute top-[100px] h-[275px] w-[100px] self-end"
@@ -62,7 +105,6 @@ const Home = ({ navigation }: HomeProps) => {
           className="h-[45px] items-center justify-center rounded-3xl bg-egglightorage px-4 shadow-eggorange"
           onPress={() => {
             handleSignOut();
-            navigation.replace("WelcomeScreen");
           }}
         >
           <Text

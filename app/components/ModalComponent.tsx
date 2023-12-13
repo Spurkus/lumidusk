@@ -4,12 +4,11 @@ import Modal from "react-native-modal";
 
 type ModalComponentProps = {
   title: string;
-  text: string;
+  text?: string;
   height: number;
   visible: boolean;
   toggleModal: () => void;
-  button?: string;
-  buttonFunction?: () => void;
+  buttons?: { label: string; onPress: () => void }[];
 };
 
 const ModalComponent: FunctionComponent<ModalComponentProps> = ({
@@ -18,12 +17,11 @@ const ModalComponent: FunctionComponent<ModalComponentProps> = ({
   height,
   visible,
   toggleModal,
-  button,
-  buttonFunction,
+  buttons,
 }) => {
   return (
     <Modal
-      className={`my-auto self-center rounded-3xl bg-egggrey px-16 py-6 max-h-[${height}]`}
+      className={`my-auto max-w-[375px] self-center rounded-3xl bg-egggrey px-16 py-6 max-h-[${height}]`}
       isVisible={visible}
       onBackdropPress={() => toggleModal()}
       style={{ maxHeight: height }}
@@ -34,24 +32,34 @@ const ModalComponent: FunctionComponent<ModalComponentProps> = ({
       >
         {title}
       </Text>
-      <Text
-        className="mb-8 text-center text-eggwhite"
-        style={{ fontFamily: "ClashGrotesk-Regular", fontSize: 20 }}
-      >
-        {text}
-      </Text>
-      <TouchableOpacity
-        className="h-[40px] w-[160px] items-center justify-center self-center rounded-2xl bg-eggorange shadow-eggorange"
-        style={styles.shadowButton}
-        onPress={buttonFunction ? buttonFunction : toggleModal}
-      >
+      {text ? (
         <Text
-          className="text-grey"
-          style={{ fontFamily: "Satoshi-Bold", fontSize: 18 }}
+          className="mb-8 text-center text-eggwhite"
+          style={{ fontFamily: "ClashGrotesk-Regular", fontSize: 20 }}
         >
-          {button ? button : "Close"}
+          {text}
         </Text>
-      </TouchableOpacity>
+      ) : (
+        <></>
+      )}
+      <View className="flex flex-row justify-center space-x-4">
+        {buttons &&
+          buttons.map((button, index) => (
+            <TouchableOpacity
+              key={index}
+              className="h-[40px] items-center justify-center self-center rounded-2xl bg-eggorange px-8 shadow-eggorange"
+              style={styles.shadowButton}
+              onPress={button.onPress}
+            >
+              <Text
+                className="text-grey"
+                style={{ fontFamily: "Satoshi-Bold", fontSize: 18 }}
+              >
+                {button.label}
+              </Text>
+            </TouchableOpacity>
+          ))}
+      </View>
     </Modal>
   );
 };

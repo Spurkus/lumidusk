@@ -112,15 +112,19 @@ const SignUp = ({ navigation }: SignUpProps) => {
         text={modalText}
         height={modalHeight}
         visible={modalVisible}
-        button={modalButton}
-        buttonFunction={() => {
-          if (user) {
-            toggleModal();
-            navigation.navigate("Home");
-          } else {
-            toggleModal();
-          }
-        }}
+        buttons={[
+          {
+            label: modalButton,
+            onPress: () => {
+              if (user) {
+                toggleModal();
+                navigation.navigate("Home");
+              } else {
+                toggleModal();
+              }
+            },
+          },
+        ]}
         toggleModal={toggleModal}
       />
       <Image

@@ -9,6 +9,8 @@ import {
   StyleSheet,
   Alert, // Never delete this alert it breaks the whole thing for some reason
 } from "react-native";
+import { auth } from "../config/firebaseConfig";
+import { signInAnonymously, updateProfile } from "firebase/auth";
 
 import Flower from "../assets/flower.png";
 import Crystal from "../assets/crystal.png";
@@ -20,6 +22,11 @@ type WelcomeScreenProps = NativeStackScreenProps<
 >;
 
 const WelcomeScreen = ({ navigation }: WelcomeScreenProps) => {
+  const handleGuest = async () => {
+    const userCredential = await signInAnonymously(auth);
+    await updateProfile(userCredential.user, { displayName: "guest" });
+    navigation.navigate("Home");
+  };
   return (
     <SafeAreaView className="flex-1 bg-eggblack">
       <View className="mt-16">
@@ -68,7 +75,7 @@ const WelcomeScreen = ({ navigation }: WelcomeScreenProps) => {
             Get Started
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.replace("Home")}>
+        <TouchableOpacity onPress={handleGuest}>
           <Text
             className="text-egglightgrey"
             style={{ fontFamily: "Satoshi-Bold", fontSize: 16 }}

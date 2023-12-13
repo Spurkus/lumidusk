@@ -5,6 +5,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { NavigationContainer } from "@react-navigation/native";
 import Routes from "./Routes";
 import { FirebaseAuthProvider } from "./app/context/AuthContext";
+import { ModalProvider } from "./app/context/ModalContext";
 export default function App() {
   // Loading fonts
   const [fontsLoaded, fontError] = useFonts({
@@ -39,7 +40,9 @@ export default function App() {
   return (
     <NavigationContainer>
       <FirebaseAuthProvider>
-        <Routes />
+        <ModalProvider>
+          <Routes />
+        </ModalProvider>
       </FirebaseAuthProvider>
     </NavigationContainer>
   );

@@ -12,7 +12,7 @@ import {
 import { auth } from "../config/firebaseConfig";
 import { signOut } from "firebase/auth";
 import { useFirebaseAuth } from "../context/AuthContext";
-import ModalComponent from "../components/ModalComponent";
+import { useModal } from "../context/ModalContext";
 
 import Box from "../components/Box";
 import CalendarComponent from "../components/CalendarComponent";
@@ -41,57 +41,35 @@ const quote = '"remember to be kind to yourself"';
 
 const Home = ({ navigation }: HomeProps) => {
   const user = useFirebaseAuth();
+  const modal = useModal();
+
   const [buttonMessage, setButtonMessage] = useState(
     "Start Today's Journaling",
   );
 
-  // Modal Component
-  const [modalTitle, setModalTitle] = useState("");
-  const [modalText, setModalText] = useState("");
-  const [modalHeight, setModalHeight] = useState(1);
-  const [modalButtons, setModalButtons] = useState([
-    {
-      label: "Close",
-      onPress: () => {},
-    },
-  ]);
-  const [modalVisible, setModalVisible] = useState(false);
-
-  const toggleModal = () => {
-    setModalVisible(!modalVisible);
-  };
-
   const handleSignOut = () => {
-    setModalTitle("Sign Out Confirmation");
-    setModalText("Your notes won't be available until you sign back in");
-    setModalHeight(240);
-    setModalButtons([
+    modal.setTitle("Sign Out Confirmation");
+    modal.setText("Your notes won't be available until you sign back in");
+    modal.setHeight(240);
+    modal.setButtons([
       {
         label: "Cancel",
-        onPress: () => setModalVisible(false),
+        onPress: () => modal.setVisible(false),
       },
       {
         label: "Confirm",
         onPress: async () => {
-          setModalVisible(false);
+          modal.setVisible(false);
           await signOut(auth);
           navigation.navigate("WelcomeScreen");
         },
       },
     ]);
-    toggleModal();
+    modal.toggleModal();
   };
 
   return (
     <SafeAreaView className="flex-1 bg-eggblack">
-      <ModalComponent
-        title={modalTitle}
-        text={modalText}
-        height={modalHeight}
-        visible={modalVisible}
-        buttons={modalButtons}
-        toggleModal={toggleModal}
-      />
       <Image
         source={Bonk}
         className="absolute top-[100px] h-[275px] w-[100px] self-end"

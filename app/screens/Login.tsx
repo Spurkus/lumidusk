@@ -14,38 +14,28 @@ import { auth } from "../config/firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { FirebaseError } from "firebase/app";
 import { useFirebaseAuth } from "../context/AuthContext";
+import { useModal } from "../context/ModalContext";
 
 import Blob from "../assets/blob.png";
 import Tringle from "../assets/tringle.png";
 import Line from "../assets/line.png";
 import Google from "../assets/google.png";
-import ModalComponent from "../components/ModalComponent";
 
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const PASSWORD_REGEX =
-  /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!&@#$%]).{8,24}$/;
 
 type LoginProps = NativeStackScreenProps<RootStackParamList, "Login">;
 
 const Login = ({ navigation }: LoginProps) => {
   const user = useFirebaseAuth();
+  const modal = useModal();
 
   const [email, setEmail] = useState("");
   const [validEmail, setValidEmail] = useState(false);
 
   const [password, setPassword] = useState("");
   const [validPassword, setValidPassword] = useState(false);
-
-  // Modal Component
-  const [modalTitle, setModalTitle] = useState("");
-  const [modalText, setModalText] = useState("");
-  const [modalHeight, setModalHeight] = useState(1);
-  const [modalButton, setModalButton] = useState("Close");
-  const [modalVisible, setModalVisible] = useState(false);
-
-  const toggleModal = () => {
-    setModalVisible(!modalVisible);
-  };
 
   // Testing the validity of inputs
   useEffect(() => {
@@ -64,53 +54,48 @@ const Login = ({ navigation }: LoginProps) => {
 
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      setModalTitle("Login Success!!");
-      setModalText("Welcome back to lumidusk, things will start get better :)");
-      setModalHeight(200);
-      setModalButton("Continue");
+      modal.setTitle("Login Success!!");
+      modal.setText(
+        "Welcome back to lumidusk, things will start get better :)",
+      );
+      modal.setHeight(200);
+      modal.setButtons([
+        {
+          label: "Continue",
+          onPress: () => {
+            navigation.navigate("Home");
+            modal.setVisible(false);
+          },
+        },
+      ]);
     } catch (error: FirebaseError | unknown) {
-      setModalTitle("Error");
-      setModalHeight(250);
-      setModalButton("Close");
+      modal.setTitle("Error");
+      modal.setHeight(250);
+      modal.setButtons([
+        { label: "Close", onPress: () => modal.setVisible(false) },
+      ]);
       if (!(error instanceof FirebaseError)) {
-        setModalText("Login error");
-      } else if (error.code === "auth/user-notfound") {
-        setModalText("Invalid email used. Please try again");
-      } else if (error.code === "auth/wrong-password") {
-        setModalText("Incorrect password. Please try again");
+        modal.setText("Login error");
+      } else if (
+        error.code === "auth/user-notfound" ||
+        error.code === "auth/wrong-password"
+      ) {
+        modal.setText(
+          "Invalid email used or incorrect password. Please try again",
+        );
       } else if (error.code === "auth/too-many-requests") {
-        setModalText(
+        modal.setText(
           "Too many unsuccessful login attempts. Please try again later.",
         );
       } else {
-        setModalText("Sign up error: " + error.message);
+        modal.setText("Login error: " + error.message);
       }
     }
-    setModalVisible(true);
+    modal.toggleModal();
   };
 
   return (
     <SafeAreaView className="flex-1 bg-eggblack">
-      <ModalComponent
-        title={modalTitle}
-        text={modalText}
-        height={modalHeight}
-        visible={modalVisible}
-        buttons={[
-          {
-            label: modalButton,
-            onPress: () => {
-              if (user) {
-                toggleModal();
-                navigation.navigate("Home");
-              } else {
-                toggleModal();
-              }
-            },
-          },
-        ]}
-        toggleModal={toggleModal}
-      />
       <Image
         source={Blob}
         className="absolute mb-24 h-[238px] w-[162px] self-end "
@@ -206,11 +191,13 @@ const Login = ({ navigation }: LoginProps) => {
         <TouchableOpacity
           className="h-[60px] w-[260px] items-center justify-center rounded-3xl bg-[#F3F2F3]"
           onPress={() => {
-            setModalTitle("Uhhh");
-            setModalText("Not implemented yet :/");
-            setModalHeight(200);
-            setModalButton("Close");
-            setModalVisible(true);
+            modal.setTitle("Uhhh");
+            modal.setText("Not implemented yet :/");
+            modal.setHeight(200);
+            modal.setButtons([
+              { label: "Close", onPress: () => modal.setVisible(false) },
+            ]);
+            modal.toggleModal();
           }}
         >
           <View className="flex flex-row space-x-2">

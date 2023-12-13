@@ -14,13 +14,13 @@ import { auth } from "../config/firebaseConfig";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { FirebaseError } from "firebase/app";
 import { useFirebaseAuth } from "../context/AuthContext";
+import { useModal } from "../context/ModalContext";
 
 import Blob from "../assets/blob.png";
 import Tringle from "../assets/tringle.png";
 import Line from "../assets/line.png";
 import Google from "../assets/google.png";
 import CollapsibleContainer from "../components/CollapsibleComponent";
-import ModalComponent from "../components/ModalComponent";
 
 const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -31,6 +31,7 @@ type SignUpProps = NativeStackScreenProps<RootStackParamList, "SignUp">;
 
 const SignUp = ({ navigation }: SignUpProps) => {
   const user = useFirebaseAuth();
+  const modal = useModal();
 
   const [username, setUsername] = useState("");
   const [validUsername, setValidUsername] = useState(false);
@@ -44,17 +45,6 @@ const SignUp = ({ navigation }: SignUpProps) => {
 
   const [matchPassword, setMatchPassword] = useState("");
   const [validMatch, setValidMatch] = useState(false);
-
-  // Modal Component
-  const [modalTitle, setModalTitle] = useState("");
-  const [modalText, setModalText] = useState("");
-  const [modalHeight, setModalHeight] = useState(1);
-  const [modalButton, setModalButton] = useState("Close");
-  const [modalVisible, setModalVisible] = useState(false);
-
-  const toggleModal = () => {
-    setModalVisible(!modalVisible);
-  };
 
   // Testing the validity of inputs
   useEffect(() => {
@@ -86,47 +76,39 @@ const SignUp = ({ navigation }: SignUpProps) => {
         password,
       );
       await updateProfile(userCredential.user, { displayName: username });
-      setModalTitle("Sign Up Success!!");
-      setModalText("Thank you for signing up, things will start get better :)");
-      setModalHeight(200);
-      setModalButton("Continue");
+      modal.setTitle("Sign Up Success!!");
+      modal.setText(
+        "Thank you for signing up, things will start get better :)",
+      );
+      modal.setHeight(240);
+      modal.setButtons([
+        {
+          label: "Continue",
+          onPress: () => {
+            navigation.navigate("Home");
+            modal.setVisible(false);
+          },
+        },
+      ]);
     } catch (error: FirebaseError | unknown) {
-      setModalTitle("Error");
-      setModalHeight(250);
-      setModalButton("Close");
+      modal.setTitle("Error");
+      modal.setHeight(250);
+      modal.setButtons([
+        { label: "Close", onPress: () => modal.setVisible(false) },
+      ]);
       if (!(error instanceof FirebaseError)) {
-        setModalText("Sign up error");
+        modal.setText("Sign up error");
       } else if (error.code === "auth/email-already-in-use") {
-        setModalText("Email already in use. Please choose a different email.");
+        modal.setText("Email already in use. Please choose a different email.");
       } else {
-        setModalText("Sign up error: " + error.message);
+        modal.setText("Sign up error: " + error.message);
       }
     }
-    setModalVisible(true);
+    modal.toggleModal();
   };
 
   return (
     <SafeAreaView className="flex-1 bg-eggblack">
-      <ModalComponent
-        title={modalTitle}
-        text={modalText}
-        height={modalHeight}
-        visible={modalVisible}
-        buttons={[
-          {
-            label: modalButton,
-            onPress: () => {
-              if (user) {
-                toggleModal();
-                navigation.navigate("Home");
-              } else {
-                toggleModal();
-              }
-            },
-          },
-        ]}
-        toggleModal={toggleModal}
-      />
       <Image
         source={Blob}
         className="absolute mb-24 h-[238px] w-[162px] self-end "
@@ -267,11 +249,13 @@ const SignUp = ({ navigation }: SignUpProps) => {
         <TouchableOpacity
           className="h-[60px] w-[260px] items-center justify-center rounded-3xl bg-[#F3F2F3]"
           onPress={() => {
-            setModalTitle("Uhhh");
-            setModalHeight(200);
-            setModalText("Not implemented yet :/");
-            setModalButton("Close");
-            setModalVisible(true);
+            modal.setTitle("Uhhh");
+            modal.setText("Not implemented yet :/");
+            modal.setHeight(200);
+            modal.setButtons([
+              { label: "Close", onPress: () => modal.setVisible(false) },
+            ]);
+            modal.toggleModal();
           }}
         >
           <View className="flex flex-row space-x-2">

@@ -15,6 +15,7 @@ import { signInAnonymously, updateProfile } from "firebase/auth";
 import Flower from "../assets/flower.png";
 import Crystal from "../assets/crystal.png";
 import Penguin from "../assets/penguin.png";
+import GuestLogin from "../components/GuestLogin";
 
 type WelcomeScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -22,11 +23,6 @@ type WelcomeScreenProps = NativeStackScreenProps<
 >;
 
 const WelcomeScreen = ({ navigation }: WelcomeScreenProps) => {
-  const handleGuest = async () => {
-    const userCredential = await signInAnonymously(auth);
-    await updateProfile(userCredential.user, { displayName: "guest" });
-    navigation.navigate("Home");
-  };
   return (
     <SafeAreaView className="flex-1 bg-eggblack">
       <View className="mt-16">
@@ -66,7 +62,7 @@ const WelcomeScreen = ({ navigation }: WelcomeScreenProps) => {
         <TouchableOpacity
           className="h-[60px] w-[260px] items-center justify-center rounded-3xl bg-eggorange shadow-eggorange"
           style={styles.shadowButton}
-          onPress={() => navigation.replace("SignUp")}
+          onPress={() => navigation.navigate("SignUp")}
         >
           <Text
             className="text-grey"
@@ -75,14 +71,9 @@ const WelcomeScreen = ({ navigation }: WelcomeScreenProps) => {
             Get Started
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={handleGuest}>
-          <Text
-            className="text-egglightgrey"
-            style={{ fontFamily: "Satoshi-Bold", fontSize: 16 }}
-          >
-            continue as guest
-          </Text>
-        </TouchableOpacity>
+        <View>
+          <GuestLogin navigation={navigation} />
+        </View>
       </View>
     </SafeAreaView>
   );

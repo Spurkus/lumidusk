@@ -13,13 +13,13 @@ import {
 import { auth } from "../config/firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { FirebaseError } from "firebase/app";
-import { useFirebaseAuth } from "../context/AuthContext";
 import { useModal } from "../context/ModalContext";
 
 import Blob from "../assets/blob.png";
 import Tringle from "../assets/tringle.png";
 import Line from "../assets/line.png";
 import Google from "../assets/google.png";
+import GuestLogin from "../components/GuestLogin";
 
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const PASSWORD_REGEX =
@@ -28,7 +28,6 @@ const PASSWORD_REGEX =
 type LoginProps = NativeStackScreenProps<RootStackParamList, "Login">;
 
 const Login = ({ navigation }: LoginProps) => {
-  const user = useFirebaseAuth();
   const modal = useModal();
 
   const [email, setEmail] = useState("");
@@ -68,6 +67,12 @@ const Login = ({ navigation }: LoginProps) => {
           },
         },
       ]);
+      modal.setBackDropPress({
+        onBackdropPress: () => {
+          navigation.navigate("Home");
+          modal.setVisible(false);
+        },
+      });
     } catch (error: FirebaseError | unknown) {
       modal.setTitle("Error");
       modal.setHeight(250);
@@ -227,14 +232,9 @@ const Login = ({ navigation }: LoginProps) => {
               </Text>
             </TouchableOpacity>
           </View>
-          <TouchableOpacity onPress={() => navigation.replace("Home")}>
-            <Text
-              className="self-center text-egglightgrey"
-              style={{ fontFamily: "Satoshi-Bold", fontSize: 16 }}
-            >
-              continue as guest
-            </Text>
-          </TouchableOpacity>
+          <View className="self-center">
+            <GuestLogin navigation={navigation} />
+          </View>
         </View>
       </View>
     </SafeAreaView>

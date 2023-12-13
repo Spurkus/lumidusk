@@ -32,13 +32,16 @@ const Routes = () => {
       initialRouteName={user ? "Home" : "WelcomeScreen"}
       screenOptions={{
         headerShown: false,
-        gestureEnabled: false,
       }}
     >
       <RootStack.Screen name="WelcomeScreen" component={WelcomeScreen} />
       <RootStack.Screen name="SignUp" component={SignUp} />
       <RootStack.Screen name="Login" component={Login} />
-      <RootStack.Screen name="Home" component={Home} />
+      <RootStack.Screen
+        options={{ gestureEnabled: false }}
+        name="Home"
+        component={Home}
+      />
     </RootStack.Navigator>
   );
 };

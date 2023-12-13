@@ -59,9 +59,9 @@ const Home = ({ navigation }: HomeProps) => {
       {
         label: "Confirm",
         onPress: async () => {
-          modal.setVisible(false);
           await signOut(auth);
           navigation.navigate("WelcomeScreen");
+          modal.setVisible(false);
         },
       },
     ]);

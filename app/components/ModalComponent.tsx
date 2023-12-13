@@ -8,7 +8,8 @@ type ModalComponentProps = {
   height: number;
   visible: boolean;
   toggleModal: () => void;
-  buttons?: { label: string; onPress: () => void }[];
+  buttons: { label: string; onPress: () => void }[];
+  backDropPress?: { onBackdropPress: () => void };
 };
 
 const ModalComponent: FunctionComponent<ModalComponentProps> = ({
@@ -18,12 +19,15 @@ const ModalComponent: FunctionComponent<ModalComponentProps> = ({
   visible,
   toggleModal,
   buttons,
+  backDropPress,
 }) => {
   return (
     <Modal
       className={`my-auto max-w-[375px] self-center rounded-3xl bg-egggrey px-16 py-6 max-h-[${height}]`}
       isVisible={visible}
-      onBackdropPress={() => toggleModal()}
+      onBackdropPress={() => {
+        backDropPress ? backDropPress.onBackdropPress() : toggleModal();
+      }}
       style={{ maxHeight: height }}
     >
       <Text

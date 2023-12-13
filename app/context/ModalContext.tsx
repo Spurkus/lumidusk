@@ -6,6 +6,7 @@ import {
   useState,
   Dispatch,
   SetStateAction,
+  useEffect,
 } from "react";
 import ModalComponent from "../components/ModalComponent";
 
@@ -18,6 +19,7 @@ type ContextState = {
     SetStateAction<{ label: string; onPress: () => void }[]>
   >;
   toggleModal: () => void;
+  setBackDropPress: Dispatch<SetStateAction<{ onBackdropPress: () => void }>>;
 };
 
 type ModalContextProps = { children: ReactNode };
@@ -33,6 +35,9 @@ const ModalProvider: FunctionComponent<ModalContextProps> = ({ children }) => {
       onPress: () => {},
     },
   ]);
+  const [backDropPress, setBackDropPress] = useState({
+    onBackdropPress: () => setVisible(false),
+  });
   const [visible, setVisible] = useState(false);
 
   const toggleModal = () => {
@@ -46,7 +51,21 @@ const ModalProvider: FunctionComponent<ModalContextProps> = ({ children }) => {
     setVisible,
     setButtons,
     toggleModal,
+    setBackDropPress,
   };
+
+  useEffect(() => {
+    // Resetting all the things when its hidden so stuff doesn't carry over
+    if (!visible) {
+      setTitle("");
+      setText("");
+      setHeight(1);
+      setButtons([]);
+      setBackDropPress({
+        onBackdropPress: () => setVisible(false),
+      });
+    }
+  }, [visible]);
 
   return (
     <ModalContext.Provider value={contextValue}>
@@ -57,6 +76,7 @@ const ModalProvider: FunctionComponent<ModalContextProps> = ({ children }) => {
         visible={visible}
         buttons={buttons}
         toggleModal={toggleModal}
+        backDropPress={backDropPress}
       />
       {children}
     </ModalContext.Provider>

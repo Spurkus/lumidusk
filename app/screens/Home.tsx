@@ -108,7 +108,7 @@ const Home = ({ navigation }: HomeProps) => {
             {currentDate} {user?.displayName}
           </Text>
         </View>
-        <Box boxName="my-6 mx-5">
+        <Box className="mx-5 my-6">
           <Text
             className="text-eggwhite"
             style={{ fontFamily: "Satoshi-Regular", fontSize: 24 }}

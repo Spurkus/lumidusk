@@ -165,7 +165,7 @@ const CalendarComponent: FunctionComponent<CalendarComponentProps> = ({
   };
 
   return (
-    <Box boxName="mx-5 py-4 z-10">
+    <Box className="z-10 mx-5 py-4">
       <Calendar
         initialDate={initialDate}
         minDate={"2005-06-07"}

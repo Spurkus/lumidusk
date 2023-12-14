@@ -4,6 +4,7 @@ import { auth } from "../config/firebaseConfig";
 import { signInAnonymously, updateProfile } from "firebase/auth";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../Routes";
+import { FirebaseError } from "firebase/app";
 import { useModal } from "../context/ModalContext";
 
 type GuestLoginProps = {
@@ -30,10 +31,22 @@ const GuestLogin = ({ navigation }: GuestLoginProps) => {
       {
         label: "Confirm",
         onPress: async () => {
-          const userCredential = await signInAnonymously(auth);
-          await updateProfile(userCredential.user, { displayName: "guest" });
-          navigation.navigate("Home");
-          modal.setVisible(false);
+          try {
+            const userCredential = await signInAnonymously(auth);
+            await updateProfile(userCredential.user, { displayName: "guest" });
+            navigation.navigate("Home");
+            modal.setVisible(false);
+          } catch (error: FirebaseError | unknown) {
+            modal.setVisible(false);
+            modal.setTitle("Error");
+            modal.setHeight(240);
+            if (!(error instanceof FirebaseError)) {
+              modal.setText("Login error");
+            } else {
+              modal.setText("Login error: " + error.message);
+            }
+            modal.setVisible(true);
+          }
         },
       },
     ]);

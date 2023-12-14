@@ -32,7 +32,7 @@ const ModalProvider: FunctionComponent<ModalContextProps> = ({ children }) => {
   const [buttons, setButtons] = useState([
     {
       label: "Close",
-      onPress: () => {},
+      onPress: () => setVisible(false),
     },
   ]);
   const [backDropPress, setBackDropPress] = useState({
@@ -60,7 +60,7 @@ const ModalProvider: FunctionComponent<ModalContextProps> = ({ children }) => {
       setTitle("");
       setText("");
       setHeight(1);
-      setButtons([]);
+      setButtons([{ label: "Close", onPress: () => setVisible(false) }]);
       setBackDropPress({
         onBackdropPress: () => setVisible(false),
       });

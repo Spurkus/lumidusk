@@ -13,6 +13,7 @@ import { auth } from "../config/firebaseConfig";
 import { signOut } from "firebase/auth";
 import { useFirebaseAuth } from "../context/AuthContext";
 import { useModal } from "../context/ModalContext";
+import { FirebaseError } from "firebase/app";
 
 import Box from "../components/Box";
 import CalendarComponent from "../components/CalendarComponent";
@@ -59,9 +60,21 @@ const Home = ({ navigation }: HomeProps) => {
       {
         label: "Confirm",
         onPress: async () => {
-          await signOut(auth);
-          navigation.navigate("WelcomeScreen");
-          modal.setVisible(false);
+          try {
+            await signOut(auth);
+            navigation.navigate("WelcomeScreen");
+            modal.setVisible(false);
+          } catch (error: FirebaseError | unknown) {
+            modal.setVisible(false);
+            modal.setTitle("Error");
+            modal.setHeight(240);
+            if (!(error instanceof FirebaseError)) {
+              modal.setText("Login error");
+            } else {
+              modal.setText("Login error: " + error.message);
+            }
+            modal.setVisible(true);
+          }
         },
       },
     ]);

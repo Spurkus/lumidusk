@@ -62,6 +62,9 @@ const formatDate = (date: Date) => {
 };
 
 const Journal = ({ route, navigation }: JournalProps) => {
+  const { dateSelected } = route.params;
+  const setUpdate = route.params.setUpdate;
+
   const user = useFirebaseAuth();
   const modal = useModal();
 
@@ -109,7 +112,6 @@ const Journal = ({ route, navigation }: JournalProps) => {
   const [title, setTitle] = useState("");
   const [text, setText] = useState("");
 
-  const { dateSelected } = route.params;
   const date = new Date(dateSelected);
   const day = days[date.getDay()];
   const formattedDate = formatDate(date);
@@ -133,6 +135,7 @@ const Journal = ({ route, navigation }: JournalProps) => {
         `journal_${user?.uid}_${dateSelected}`,
         JSON.stringify(journalData),
       );
+      setUpdate(true);
     } catch (error) {
       console.error("Error saving journal data:", error);
     }

@@ -18,11 +18,11 @@ import { FirebaseError } from "firebase/app";
 
 import Box from "../components/Box";
 import CalendarComponent from "../components/CalendarComponent";
+import CalendarComponentTwo from "../components/CalendarComponentTwo";
 import { CalendarUtils } from "react-native-calendars";
 
 import Bonk from "../assets/bonk.png";
 import Bink from "../assets/bink.png";
-import CalendarComponentTwo from "../components/CalendarComponentTwo";
 
 type HomeProps = NativeStackScreenProps<RootStackParamList, "Home">;
 type Mood = "happy" | "good" | "alright" | "sad" | "depressed";
@@ -54,6 +54,7 @@ const Home = ({ navigation }: HomeProps) => {
     "Start Today's Journaling",
   );
   const [dateSelected, setDateSelected] = useState(initialDate);
+  const [update, setUpdate] = useState(false);
   const [loading, setLoading] = useState(true);
 
   const loadMoodData = async () => {
@@ -62,7 +63,7 @@ const Home = ({ navigation }: HomeProps) => {
       const moodMap: Record<string, Mood> = {};
       const keys = await AsyncStorage.getAllKeys();
       for (const key of keys) {
-        if (key.startsWith("journal_")) {
+        if (key.startsWith("journal_") && key.split("_")[1] == user?.uid) {
           const storedData = await AsyncStorage.getItem(key);
           if (storedData) {
             const parsedData = JSON.parse(storedData);
@@ -116,11 +117,12 @@ const Home = ({ navigation }: HomeProps) => {
 
   useEffect(() => {
     loadMoodData();
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     loadMoodData();
-  }, [dateSelected]);
+    setUpdate(false);
+  }, [update]);
 
   return (
     <SafeAreaView className="flex-1 bg-eggblack">
@@ -134,17 +136,18 @@ const Home = ({ navigation }: HomeProps) => {
       />
       <View className="absolute right-4 top-16 self-end">
         <TouchableOpacity
-          className="h-[45px] items-center justify-center rounded-3xl bg-egglightorage px-4 shadow-eggorange"
           onPress={() => {
             handleSignOut();
           }}
         >
-          <Text
-            className="text-grey"
-            style={{ fontFamily: "Satoshi-Bold", fontSize: 20 }}
-          >
-            Sign out
-          </Text>
+          <View className="h-[45px] items-center justify-center rounded-3xl bg-egglightorage px-4 shadow-eggorange">
+            <Text
+              className="text-grey"
+              style={{ fontFamily: "Satoshi-Bold", fontSize: 20 }}
+            >
+              Sign out
+            </Text>
+          </View>
         </TouchableOpacity>
       </View>
       <View className="mt-8">
@@ -203,7 +206,10 @@ const Home = ({ navigation }: HomeProps) => {
           className="h-[60px] items-center justify-center rounded-3xl bg-eggorange px-4 shadow-eggorange"
           style={styles.shadowButton}
           onPress={() =>
-            navigation.navigate("Journal", { dateSelected: dateSelected })
+            navigation.navigate("Journal", {
+              dateSelected: dateSelected,
+              setUpdate: setUpdate,
+            })
           }
         >
           <Text

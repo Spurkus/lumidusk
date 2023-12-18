@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, Dispatch, SetStateAction } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as SplashScreen from "expo-splash-screen";
 import { useFirebaseAuth } from "./app/context/AuthContext";
@@ -14,7 +14,10 @@ export type RootStackParamList = {
   SignUp: undefined;
   Login: undefined;
   Home: undefined;
-  Journal: { dateSelected: string };
+  Journal: {
+    dateSelected: string;
+    setUpdate: Dispatch<SetStateAction<boolean>>;
+  };
 };
 
 const Routes = () => {

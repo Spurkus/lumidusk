@@ -113,7 +113,6 @@ const CalendarComponentTwo: FunctionComponent<CalendarComponentProps> = ({
   moodMap,
 }) => {
   const userDates = createDates(moodMap);
-  console.log(userDates);
 
   const [markSelected, setMarkSelected] = useState({
     [selected]: getSelected(true, true),

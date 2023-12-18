@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../Routes";
 import {
@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { auth } from "../config/firebaseConfig";
 import { signOut } from "firebase/auth";
 import { useFirebaseAuth } from "../context/AuthContext";
@@ -21,8 +22,10 @@ import { CalendarUtils } from "react-native-calendars";
 
 import Bonk from "../assets/bonk.png";
 import Bink from "../assets/bink.png";
+import CalendarComponentTwo from "../components/CalendarComponentTwo";
 
 type HomeProps = NativeStackScreenProps<RootStackParamList, "Home">;
+type Mood = "happy" | "good" | "alright" | "sad" | "depressed";
 
 // Current Date
 export const days = [
@@ -46,10 +49,37 @@ const Home = ({ navigation }: HomeProps) => {
   const user = useFirebaseAuth();
   const modal = useModal();
 
+  const [moodMap, setMoodMap] = useState({});
   const [buttonMessage, setButtonMessage] = useState(
     "Start Today's Journaling",
   );
   const [dateSelected, setDateSelected] = useState(initialDate);
+  const [loading, setLoading] = useState(true);
+
+  const loadMoodData = async () => {
+    try {
+      setLoading(true);
+      const moodMap: Record<string, Mood> = {};
+      const keys = await AsyncStorage.getAllKeys();
+      for (const key of keys) {
+        if (key.startsWith("journal_")) {
+          const storedData = await AsyncStorage.getItem(key);
+          if (storedData) {
+            const parsedData = JSON.parse(storedData);
+            const date = key
+              .replace("journal_", "")
+              .replace(`${user?.uid}_`, "");
+            moodMap[date] = parsedData.mood;
+          }
+        }
+      }
+      setMoodMap(moodMap);
+    } catch (error) {
+      console.error("Error loading mood data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleSignOut = () => {
     modal.setTitle("Sign Out Confirmation");
@@ -84,6 +114,14 @@ const Home = ({ navigation }: HomeProps) => {
     modal.toggleModal();
   };
 
+  useEffect(() => {
+    loadMoodData();
+  }, []);
+
+  useEffect(() => {
+    loadMoodData();
+  }, [dateSelected]);
+
   return (
     <SafeAreaView className="flex-1 bg-eggblack">
       <Image
@@ -109,19 +147,25 @@ const Home = ({ navigation }: HomeProps) => {
           </Text>
         </TouchableOpacity>
       </View>
-      <View className="mt-16">
+      <View className="mt-8">
         <View className="ml-6">
+          <Text
+            className="top-2 text-eggwhite"
+            style={{ fontFamily: "ClashGrotesk-Regular", fontSize: 24 }}
+          >
+            Welcome {user?.displayName} {" :3"}
+          </Text>
           <Text
             className="text-eggwhite"
             style={{ fontFamily: "ClashGrotesk-Medium", fontSize: 48 }}
           >
-            {currentDay} {" :)"}
+            {currentDay}
           </Text>
           <Text
             className="text-eggwhite"
             style={{ fontFamily: "ClashGrotesk-Light", fontSize: 24 }}
           >
-            {currentDate} {user?.displayName}
+            {currentDate}
           </Text>
         </View>
         <Box className="mx-5 my-6">
@@ -139,11 +183,21 @@ const Home = ({ navigation }: HomeProps) => {
           </Text>
         </Box>
       </View>
-      <CalendarComponent
-        setMessage={setButtonMessage}
-        selected={dateSelected}
-        setSelected={setDateSelected}
-      />
+      {loading ? (
+        <CalendarComponentTwo
+          moodMap={moodMap}
+          setMessage={setButtonMessage}
+          selected={dateSelected}
+          setSelected={setDateSelected}
+        />
+      ) : (
+        <CalendarComponent
+          moodMap={moodMap}
+          setMessage={setButtonMessage}
+          selected={dateSelected}
+          setSelected={setDateSelected}
+        />
+      )}
       <View className="mt-12 flex-1 items-center space-y-6">
         <TouchableOpacity
           className="h-[60px] items-center justify-center rounded-3xl bg-eggorange px-4 shadow-eggorange"

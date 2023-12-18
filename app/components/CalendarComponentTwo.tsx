@@ -106,7 +106,7 @@ const createDates = (moodMap: Record<string, Mood>) => {
   return transformedDates;
 };
 
-const CalendarComponent: FunctionComponent<CalendarComponentProps> = ({
+const CalendarComponentTwo: FunctionComponent<CalendarComponentProps> = ({
   setMessage,
   selected,
   setSelected,
@@ -194,4 +194,4 @@ const CalendarComponent: FunctionComponent<CalendarComponentProps> = ({
   );
 };
 
-export default CalendarComponent;
+export default CalendarComponentTwo;

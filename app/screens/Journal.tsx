@@ -11,8 +11,12 @@ import {
 } from "react-native";
 import { useState, useEffect } from "react";
 import type { RouteProp } from "@react-navigation/native";
-import type { NativeStackScreenProps } from "@react-navigation/native-stack";
+import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../Routes";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useFirebaseAuth } from "../context/AuthContext";
+import { useModal } from "../context/ModalContext";
+import { FirebaseError } from "firebase/app";
 import DropDownPicker from "react-native-dropdown-picker";
 DropDownPicker.setListMode("SCROLLVIEW"); // Makes the thing happy
 
@@ -25,11 +29,11 @@ import { days } from "../screens/Home";
 
 import Line from "../assets/line.png";
 
-type Mood = "default" | "happy" | "good" | "alright" | "sad" | "depressed";
+type Mood = "" | "happy" | "good" | "alright" | "sad" | "depressed";
 
 type JournalProps = {
   route: RouteProp<RootStackParamList, "Journal">;
-  navigation: NativeStackScreenProps<RootStackParamList, "Journal">;
+  navigation: NativeStackNavigationProp<RootStackParamList, "Journal">;
 };
 
 const formatDate = (date: Date) => {
@@ -58,8 +62,11 @@ const formatDate = (date: Date) => {
 };
 
 const Journal = ({ route, navigation }: JournalProps) => {
+  const user = useFirebaseAuth();
+  const modal = useModal();
+
   const [openDropdown, setOpenDropdowwn] = useState(false);
-  const [mood, setMood] = useState<Mood>("default");
+  const [mood, setMood] = useState<Mood>("");
   const [backgroundColor, setBackgroundColor] = useState("#505050");
   const [moods, setMoods] = useState([
     {
@@ -114,6 +121,43 @@ const Journal = ({ route, navigation }: JournalProps) => {
     }
   }, [mood]);
 
+  const storeData = async () => {
+    try {
+      const journalData = {
+        title,
+        text,
+        mood,
+      };
+
+      await AsyncStorage.setItem(
+        `journal_${user?.uid}_${dateSelected}`,
+        JSON.stringify(journalData),
+      );
+    } catch (error) {
+      console.error("Error saving journal data:", error);
+    }
+  };
+
+  const loadJournalData = async () => {
+    try {
+      const storedData = await AsyncStorage.getItem(
+        `journal_${user?.uid}_${dateSelected}`,
+      );
+      if (storedData) {
+        const parsedData = JSON.parse(storedData);
+        setTitle(parsedData.title);
+        setText(parsedData.text);
+        setMood(parsedData.mood);
+      }
+    } catch (error) {
+      console.error("Error loading journal data:", error);
+    }
+  };
+
+  useEffect(() => {
+    loadJournalData();
+  }, []);
+
   return (
     <TouchableWithoutFeedback
       onPress={() => {
@@ -135,9 +179,29 @@ const Journal = ({ route, navigation }: JournalProps) => {
           keyboardDismissMode={"interactive"}
           onScrollEndDrag={Keyboard.dismiss}
         >
-          <View>
+          <View className="mt-16">
+            <View>
+              <TouchableOpacity
+                className="ml-4 max-w-[60px] flex-row items-center"
+                onPress={() => {
+                  navigation.navigate("Home");
+                }}
+              >
+                <FontAwesomeIcon
+                  style={{ color: "#FFFFE3" }}
+                  size={15}
+                  icon={faAngleLeft}
+                />
+                <Text
+                  className="bottom-0.5 text-eggwhite"
+                  style={{ fontFamily: "Satoshi-Bold", fontSize: 20 }}
+                >
+                  return
+                </Text>
+              </TouchableOpacity>
+            </View>
             <Box
-              className="z-20 mx-5 my-2 mt-16 shadow-egglightgrey"
+              className="z-20 mx-5 my-2 shadow-egglightgrey"
               style={{ shadowOpacity: 0.25, shadowRadius: 12 }}
             >
               <View className="flex-row justify-between p-1">
@@ -181,6 +245,7 @@ const Journal = ({ route, navigation }: JournalProps) => {
                       setOpen={setOpenDropdowwn}
                       setValue={setMood}
                       setItems={setMoods}
+                      onChangeValue={() => storeData()}
                       labelStyle={{
                         textAlign: "center",
                         fontFamily: "ClashGrotesk-Medium",
@@ -225,6 +290,7 @@ const Journal = ({ route, navigation }: JournalProps) => {
               onChangeText={(text) => setTitle(text)}
               value={title}
               onFocus={() => setOpenDropdowwn(false)}
+              onEndEditing={() => storeData()}
             />
             <Image className="self-center" source={Line} />
             <TextInput
@@ -239,9 +305,7 @@ const Journal = ({ route, navigation }: JournalProps) => {
               value={text}
               onFocus={() => setOpenDropdowwn(false)}
               scrollEnabled={false}
-              onEndEditing={() => {
-                // Save to async storage
-              }}
+              onEndEditing={() => storeData()}
             />
           </View>
         </ScrollView>

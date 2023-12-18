@@ -17,6 +17,7 @@ import { FirebaseError } from "firebase/app";
 
 import Box from "../components/Box";
 import CalendarComponent from "../components/CalendarComponent";
+import { CalendarUtils } from "react-native-calendars";
 
 import Bonk from "../assets/bonk.png";
 import Bink from "../assets/bink.png";
@@ -24,7 +25,7 @@ import Bink from "../assets/bink.png";
 type HomeProps = NativeStackScreenProps<RootStackParamList, "Home">;
 
 // Current Date
-const days = [
+export const days = [
   "Sunday",
   "Monday",
   "Tuesday",
@@ -36,6 +37,7 @@ const days = [
 const date = new Date();
 const currentDay = days[date.getDay()];
 const currentDate = date.toLocaleDateString();
+const initialDate = CalendarUtils.getCalendarDateString(date);
 
 // Auto generate daily quote somehow
 const quote = '"remember to be kind to yourself"';
@@ -47,6 +49,7 @@ const Home = ({ navigation }: HomeProps) => {
   const [buttonMessage, setButtonMessage] = useState(
     "Start Today's Journaling",
   );
+  const [dateSelected, setDateSelected] = useState(initialDate);
 
   const handleSignOut = () => {
     modal.setTitle("Sign Out Confirmation");
@@ -136,11 +139,18 @@ const Home = ({ navigation }: HomeProps) => {
           </Text>
         </Box>
       </View>
-      <CalendarComponent setMessage={setButtonMessage} />
+      <CalendarComponent
+        setMessage={setButtonMessage}
+        selected={dateSelected}
+        setSelected={setDateSelected}
+      />
       <View className="mt-12 flex-1 items-center space-y-6">
         <TouchableOpacity
           className="h-[60px] items-center justify-center rounded-3xl bg-eggorange px-4 shadow-eggorange"
           style={styles.shadowButton}
+          onPress={() =>
+            navigation.navigate("Journal", { dateSelected: dateSelected })
+          }
         >
           <Text
             className="text-grey"

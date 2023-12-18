@@ -9,6 +9,8 @@ import {
   TouchableOpacity,
   StyleSheet,
   TextInput,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
 import { auth } from "../config/firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
@@ -100,144 +102,146 @@ const Login = ({ navigation }: LoginProps) => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-eggblack">
-      <Image
-        source={Blob}
-        className="absolute mb-24 h-[238px] w-[162px] self-end "
-      />
-      <Image
-        source={Tringle}
-        className="absolute top-[380px] h-[160px] w-[82px]"
-      />
-      <View className="mt-32 justify-center">
-        <Text
-          className="self-center text-eggwhite"
-          style={{ fontFamily: "ClashGrotesk-Medium", fontSize: 48 }}
-        >
-          Login
-        </Text>
-        <Text
-          className="mt-1 self-center text-eggwhite"
-          style={{ fontFamily: "ClashGrotesk-Regular", fontSize: 18 }}
-        >
-          Welcome back! Please enter your details {":)"}
-        </Text>
-        <View className="form my-12 justify-center space-y-4">
-          <View>
-            <Text
-              className="ml-8 text-eggwhite"
-              style={{ fontFamily: "ClashGrotesk-Regular", fontSize: 20 }}
-            >
-              Email
-            </Text>
-            <TextInput
-              className={`mx-8 my-1 h-12 rounded-3xl px-4 py-1 ${
-                validEmail || !email ? "bg-[#E8E6EA]" : "bg-[#f9e3e3]"
-              }`}
-              style={{ fontFamily: "Satoshi-Regular", fontSize: 18 }}
-              placeholder="example@mail.com"
-              keyboardType="email-address"
-              inputMode="email"
-              onChangeText={(text) => setEmail(text)}
-              value={email}
-            />
-          </View>
-          <View>
-            <Text
-              className="ml-8 text-eggwhite"
-              style={{ fontFamily: "ClashGrotesk-Regular", fontSize: 20 }}
-            >
-              Password
-            </Text>
-            <TextInput
-              className={`mx-8 my-1 h-12 rounded-3xl px-4 py-1 ${
-                validPassword || !password ? "bg-[#E8E6EA]" : "bg-[#f9e3e3]"
-              }`}
-              style={{ fontFamily: "Satoshi-Regular", fontSize: 18 }}
-              placeholder="•••••••••"
-              secureTextEntry={true}
-              onChangeText={(text) => setPassword(text)}
-              value={password}
-            />
-            <Text
-              className="mx-8 mt-2 self-end text-egglightgrey"
-              style={{ fontFamily: "Satoshi-Bold", fontSize: 16 }}
-            >
-              forgot password?
-            </Text>
-          </View>
-        </View>
-      </View>
-      <View className="flex-1 items-center space-y-6">
-        <TouchableOpacity
-          className={`h-[60px] w-[260px] items-center justify-center rounded-3xl ${
-            validEmail && validPassword
-              ? "bg-eggorange shadow-eggorange"
-              : "bg-egglightgrey shadow-egglightgrey"
-          }`}
-          disabled={!validEmail || !validPassword}
-          style={styles.shadowButton}
-          onPress={() => handleLogin()}
-        >
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <SafeAreaView className="flex-1 bg-eggblack">
+        <Image
+          source={Blob}
+          className="absolute mb-24 h-[238px] w-[162px] self-end "
+        />
+        <Image
+          source={Tringle}
+          className="absolute top-[380px] h-[160px] w-[82px]"
+        />
+        <View className="mt-32 justify-center">
           <Text
-            className={`${
-              validEmail && validPassword ? "text-grey" : "text-eggwhite"
-            }`}
-            style={
-              validEmail && validPassword
-                ? { fontFamily: "Satoshi-Bold", fontSize: 20 }
-                : { fontFamily: "Satoshi-Regular", fontSize: 20 }
-            }
+            className="self-center text-eggwhite"
+            style={{ fontFamily: "ClashGrotesk-Medium", fontSize: 48 }}
           >
             Login
           </Text>
-        </TouchableOpacity>
-        <Image source={Line} />
-        <TouchableOpacity
-          className="h-[60px] w-[260px] items-center justify-center rounded-3xl bg-[#F3F2F3]"
-          onPress={() => {
-            modal.setTitle("Uhhh");
-            modal.setText("Not implemented yet :/");
-            modal.setHeight(200);
-            modal.setButtons([
-              { label: "Close", onPress: () => modal.setVisible(false) },
-            ]);
-            modal.toggleModal();
-          }}
-        >
-          <View className="flex flex-row space-x-2">
-            <Image source={Google} className="h-[29px] w-[29px]" />
-            <Text
-              className="text-grey"
-              style={{ fontFamily: "Satoshi-Regular", fontSize: 20 }}
-            >
-              Login with Google
-            </Text>
-          </View>
-        </TouchableOpacity>
-        <View className="relative top-4 space-y-2 text-center">
-          <View className="flex flex-row space-x-1">
-            <Text
-              className="text-egglightgrey"
-              style={{ fontFamily: "Satoshi-Bold", fontSize: 16 }}
-            >
-              Don't have an account?
-            </Text>
-            <TouchableOpacity onPress={() => navigation.replace("SignUp")}>
+          <Text
+            className="mt-1 self-center text-eggwhite"
+            style={{ fontFamily: "ClashGrotesk-Regular", fontSize: 18 }}
+          >
+            Welcome back! Please enter your details {":)"}
+          </Text>
+          <View className="my-12 justify-center space-y-4">
+            <View>
               <Text
-                className="text-[#C9A7E3]"
+                className="ml-8 text-eggwhite"
+                style={{ fontFamily: "ClashGrotesk-Regular", fontSize: 20 }}
+              >
+                Email
+              </Text>
+              <TextInput
+                className={`mx-8 my-1 h-12 rounded-3xl px-4 py-1 ${
+                  validEmail || !email ? "bg-[#E8E6EA]" : "bg-[#f9e3e3]"
+                }`}
+                style={{ fontFamily: "Satoshi-Regular", fontSize: 18 }}
+                placeholder="example@mail.com"
+                keyboardType="email-address"
+                inputMode="email"
+                onChangeText={(text) => setEmail(text)}
+                value={email}
+              />
+            </View>
+            <View>
+              <Text
+                className="ml-8 text-eggwhite"
+                style={{ fontFamily: "ClashGrotesk-Regular", fontSize: 20 }}
+              >
+                Password
+              </Text>
+              <TextInput
+                className={`mx-8 my-1 h-12 rounded-3xl px-4 py-1 ${
+                  validPassword || !password ? "bg-[#E8E6EA]" : "bg-[#f9e3e3]"
+                }`}
+                style={{ fontFamily: "Satoshi-Regular", fontSize: 18 }}
+                placeholder="•••••••••"
+                secureTextEntry={true}
+                onChangeText={(text) => setPassword(text)}
+                value={password}
+              />
+              <Text
+                className="mx-8 mt-2 self-end text-egglightgrey"
                 style={{ fontFamily: "Satoshi-Bold", fontSize: 16 }}
               >
-                Sign up
+                forgot password?
               </Text>
-            </TouchableOpacity>
-          </View>
-          <View className="self-center">
-            <GuestLogin navigation={navigation} />
+            </View>
           </View>
         </View>
-      </View>
-    </SafeAreaView>
+        <View className="flex-1 items-center space-y-6">
+          <TouchableOpacity
+            className={`h-[60px] w-[260px] items-center justify-center rounded-3xl ${
+              validEmail && validPassword
+                ? "bg-eggorange shadow-eggorange"
+                : "bg-egglightgrey shadow-egglightgrey"
+            }`}
+            disabled={!validEmail || !validPassword}
+            style={styles.shadowButton}
+            onPress={() => handleLogin()}
+          >
+            <Text
+              className={`${
+                validEmail && validPassword ? "text-grey" : "text-eggwhite"
+              }`}
+              style={
+                validEmail && validPassword
+                  ? { fontFamily: "Satoshi-Bold", fontSize: 20 }
+                  : { fontFamily: "Satoshi-Regular", fontSize: 20 }
+              }
+            >
+              Login
+            </Text>
+          </TouchableOpacity>
+          <Image source={Line} />
+          <TouchableOpacity
+            className="h-[60px] w-[260px] items-center justify-center rounded-3xl bg-[#F3F2F3]"
+            onPress={() => {
+              modal.setTitle("Uhhh");
+              modal.setText("Not implemented yet :/");
+              modal.setHeight(200);
+              modal.setButtons([
+                { label: "Close", onPress: () => modal.setVisible(false) },
+              ]);
+              modal.toggleModal();
+            }}
+          >
+            <View className="flex flex-row space-x-2">
+              <Image source={Google} className="h-[29px] w-[29px]" />
+              <Text
+                className="text-grey"
+                style={{ fontFamily: "Satoshi-Regular", fontSize: 20 }}
+              >
+                Login with Google
+              </Text>
+            </View>
+          </TouchableOpacity>
+          <View className="relative top-4 space-y-2 text-center">
+            <View className="flex flex-row space-x-1">
+              <Text
+                className="text-egglightgrey"
+                style={{ fontFamily: "Satoshi-Bold", fontSize: 16 }}
+              >
+                Don't have an account?
+              </Text>
+              <TouchableOpacity onPress={() => navigation.replace("SignUp")}>
+                <Text
+                  className="text-[#C9A7E3]"
+                  style={{ fontFamily: "Satoshi-Bold", fontSize: 16 }}
+                >
+                  Sign up
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <View className="self-center">
+              <GuestLogin navigation={navigation} />
+            </View>
+          </View>
+        </View>
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 };
 

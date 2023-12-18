@@ -21,6 +21,8 @@ type CustomDate = {
 
 type CalendarComponentProps = {
   setMessage: Dispatch<SetStateAction<string>>;
+  selected: string;
+  setSelected: Dispatch<SetStateAction<string>>;
 };
 
 const MOOD_COLOURS = {
@@ -116,10 +118,11 @@ const moodMap: Record<string, Mood> = {
 
 const CalendarComponent: FunctionComponent<CalendarComponentProps> = ({
   setMessage,
+  selected,
+  setSelected,
 }) => {
   const userDates = createDates(moodMap);
 
-  const [selected, setSelected] = useState<string>(initialDate);
   const [markSelected, setMarkSelected] = useState({
     [selected]: getSelected(true, true),
   });
@@ -174,10 +177,7 @@ const CalendarComponent: FunctionComponent<CalendarComponentProps> = ({
           setSelected(day.dateString);
         }}
         onDayLongPress={(day) => {
-          console.log("selected day", day);
-        }}
-        onMonthChange={(month) => {
-          console.log("month changed", month);
+          setSelected(day.dateString);
         }}
         disableMonthChange={true}
         hideExtraDays={true}

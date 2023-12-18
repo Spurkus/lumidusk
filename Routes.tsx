@@ -1,18 +1,20 @@
 import { useEffect } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as SplashScreen from "expo-splash-screen";
+import { useFirebaseAuth } from "./app/context/AuthContext";
 
 import WelcomeScreen from "./app/screens/WelcomeScreen";
 import SignUp from "./app/screens/SignUp";
 import Login from "./app/screens/Login";
 import Home from "./app/screens/Home";
-import { useFirebaseAuth } from "./app/context/AuthContext";
+import Journal from "./app/screens/Journal";
 
 export type RootStackParamList = {
   WelcomeScreen: undefined;
   SignUp: undefined;
   Login: undefined;
   Home: undefined;
+  Journal: { dateSelected: string };
 };
 
 const Routes = () => {
@@ -42,6 +44,7 @@ const Routes = () => {
         name="Home"
         component={Home}
       />
+      <RootStack.Screen name="Journal" component={Journal} />
     </RootStack.Navigator>
   );
 };

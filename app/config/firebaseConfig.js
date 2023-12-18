@@ -1,10 +1,9 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { initializeApp } from "firebase/app";
 import { getReactNativePersistence, initializeAuth } from "firebase/auth";
-import { FIREBASE_API_KEY } from "@env";
 
 const firebaseConfig = {
-  apiKey: FIREBASE_API_KEY,
+  apiKey: process.env.FIREBASE_API_KEY,
   authDomain: "lumidusk.firebaseapp.com",
   projectId: "lumidusk",
   storageBucket: "lumidusk.appspot.com",

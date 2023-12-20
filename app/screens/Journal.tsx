@@ -8,6 +8,7 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import { useState, useEffect } from "react";
 import type { RouteProp } from "@react-navigation/native";
@@ -125,6 +126,10 @@ const Journal = ({ route, navigation }: JournalProps) => {
   }, [mood]);
 
   const storeData = async () => {
+    if (title == "" || mood == "") {
+      // Both the title and mood should be selected/written before storing
+      return;
+    }
     try {
       const journalData = {
         title,
@@ -161,6 +166,47 @@ const Journal = ({ route, navigation }: JournalProps) => {
   useEffect(() => {
     loadJournalData();
   }, []);
+
+  useEffect(() => {
+    const unsubscribeBeforeRemove = navigation.addListener(
+      "beforeRemove",
+      (e) => {
+        if (!(title == "" || mood == "") || (title == "" && mood == "")) {
+          // If we don't have unsaved changes, then we don't need to do anything
+          return;
+        }
+
+        // Prevent default behavior of leaving the screen
+        e.preventDefault();
+
+        // Prompt the user before leaving the screen
+        Alert.alert(
+          "Discard changes?",
+          "You have unsaved changes. Are you sure to discard them and leave the screen?",
+          [
+            { text: "Don't leave", style: "cancel", onPress: () => {} },
+            {
+              text: "Discard",
+              style: "destructive",
+              // If the user confirmed, then we dispatch the action we blocked earlier
+              // This will continue the action that had triggered the removal of the screen
+              onPress: () => navigation.dispatch(e.data.action),
+            },
+          ],
+        );
+      },
+    );
+
+    // Cleanup the listener when the component is unmounted
+    return unsubscribeBeforeRemove;
+  }, [navigation, title == "", mood == ""]);
+
+  useEffect(() => {
+    navigation.setOptions({
+      gestureEnabled:
+        !(title == "" || mood == "") || (title == "" && mood == ""),
+    });
+  }, [navigation, title == "", mood == ""]);
 
   return (
     <TouchableWithoutFeedback

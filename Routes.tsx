@@ -8,6 +8,7 @@ import SignUp from "./app/screens/SignUp";
 import Login from "./app/screens/Login";
 import Home from "./app/screens/Home";
 import Journal from "./app/screens/Journal";
+import JournalSearch from "./app/screens/JournalSearch";
 
 export type RootStackParamList = {
   WelcomeScreen: undefined;
@@ -16,8 +17,8 @@ export type RootStackParamList = {
   Home: undefined;
   Journal: {
     dateSelected: string;
-    setUpdate: Dispatch<SetStateAction<boolean>>;
   };
+  JournalSearch: undefined;
 };
 
 const Routes = () => {
@@ -39,7 +40,11 @@ const Routes = () => {
         headerShown: false,
       }}
     >
-      <RootStack.Screen name="WelcomeScreen" component={WelcomeScreen} />
+      <RootStack.Screen
+        options={{ gestureEnabled: false }}
+        name="WelcomeScreen"
+        component={WelcomeScreen}
+      />
       <RootStack.Screen name="SignUp" component={SignUp} />
       <RootStack.Screen name="Login" component={Login} />
       <RootStack.Screen
@@ -48,6 +53,7 @@ const Routes = () => {
         component={Home}
       />
       <RootStack.Screen name="Journal" component={Journal} />
+      <RootStack.Screen name="JournalSearch" component={JournalSearch} />
     </RootStack.Navigator>
   );
 };

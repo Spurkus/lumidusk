@@ -28,6 +28,7 @@ import Box from "../components/Box";
 import { days } from "../screens/Home";
 
 import Line from "../assets/line.png";
+import { useJournalData } from "../context/JournalContext";
 
 type Mood = "" | "happy" | "good" | "alright" | "sad" | "depressed";
 
@@ -62,8 +63,8 @@ const formatDate = (date: Date) => {
 };
 
 const Journal = ({ route, navigation }: JournalProps) => {
+  const { setUpdate } = useJournalData();
   const { dateSelected } = route.params;
-  const setUpdate = route.params.setUpdate;
 
   const user = useFirebaseAuth();
   const modal = useModal();
@@ -309,6 +310,7 @@ const Journal = ({ route, navigation }: JournalProps) => {
               onFocus={() => setOpenDropdowwn(false)}
               scrollEnabled={false}
               onEndEditing={() => storeData()}
+              autoCorrect={true}
             />
           </View>
         </ScrollView>

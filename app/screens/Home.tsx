@@ -23,6 +23,8 @@ import { CalendarUtils } from "react-native-calendars";
 
 import Bonk from "../assets/bonk.png";
 import Bink from "../assets/bink.png";
+import { useJournalData } from "../context/JournalContext";
+import NavigationBar from "../components/NavigationBar";
 
 type HomeProps = NativeStackScreenProps<RootStackParamList, "Home">;
 type Mood = "happy" | "good" | "alright" | "sad" | "depressed";
@@ -48,13 +50,13 @@ const quote = '"remember to be kind to yourself"';
 const Home = ({ navigation }: HomeProps) => {
   const user = useFirebaseAuth();
   const modal = useModal();
+  const journal = useJournalData();
 
   const [moodMap, setMoodMap] = useState({});
   const [buttonMessage, setButtonMessage] = useState(
     "Start Today's Journaling",
   );
   const [dateSelected, setDateSelected] = useState(initialDate);
-  const [update, setUpdate] = useState(false);
   const [loading, setLoading] = useState(true);
 
   const loadMoodData = async () => {
@@ -121,106 +123,106 @@ const Home = ({ navigation }: HomeProps) => {
 
   useEffect(() => {
     loadMoodData();
-    setUpdate(false);
-  }, [update]);
+    journal.setUpdate(false);
+  }, [journal.update]);
 
   return (
-    <SafeAreaView className="flex-1 bg-eggblack">
-      <Image
-        source={Bonk}
-        className="absolute top-[100px] h-[275px] w-[100px] self-end"
-      />
-      <Image
-        source={Bink}
-        className="absolute top-[350px] h-[400px] w-[300px]"
-      />
-      <View className="absolute right-4 top-16 self-end">
-        <TouchableOpacity
-          onPress={() => {
-            handleSignOut();
-          }}
-        >
-          <View className="h-[45px] items-center justify-center rounded-3xl bg-egglightorage px-4 shadow-eggorange">
+    <View className="flex-1">
+      <SafeAreaView className="flex-1 bg-eggblack">
+        <Image
+          source={Bonk}
+          className="absolute top-[100px] h-[275px] w-[100px] self-end"
+        />
+        <Image
+          source={Bink}
+          className="absolute top-[350px] h-[400px] w-[300px]"
+        />
+        <View className="absolute right-4 top-16 self-end">
+          <TouchableOpacity
+            onPress={() => {
+              handleSignOut();
+            }}
+          >
+            <View className="h-[45px] items-center justify-center rounded-3xl bg-egglightorage px-4 shadow-eggorange">
+              <Text
+                className="text-grey"
+                style={{ fontFamily: "Satoshi-Bold", fontSize: 20 }}
+              >
+                Sign out
+              </Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+        <View className="mt-6">
+          <View className="ml-6">
+            <Text
+              className="top-2 text-eggwhite"
+              style={{ fontFamily: "ClashGrotesk-Regular", fontSize: 24 }}
+            >
+              Welcome {user?.displayName} {" :3"}
+            </Text>
+            <Text
+              className="text-eggwhite"
+              style={{ fontFamily: "ClashGrotesk-Medium", fontSize: 48 }}
+            >
+              {currentDay}
+            </Text>
+            <Text
+              className="text-eggwhite"
+              style={{ fontFamily: "ClashGrotesk-Light", fontSize: 24 }}
+            >
+              {currentDate}
+            </Text>
+          </View>
+          <Box className="mx-5 my-6">
+            <Text
+              className="text-eggwhite"
+              style={{ fontFamily: "Satoshi-Regular", fontSize: 24 }}
+            >
+              {quote}
+            </Text>
+            <Text
+              className="self-end text-[#B4A5A1]"
+              style={{ fontFamily: "Satoshi-Medium", fontSize: 14 }}
+            >
+              Jonathan Yun - 2021
+            </Text>
+          </Box>
+        </View>
+        {loading ? (
+          <CalendarComponentTwo
+            moodMap={moodMap}
+            setMessage={setButtonMessage}
+            selected={dateSelected}
+            setSelected={setDateSelected}
+          />
+        ) : (
+          <CalendarComponent
+            moodMap={moodMap}
+            setMessage={setButtonMessage}
+            selected={dateSelected}
+            setSelected={setDateSelected}
+          />
+        )}
+        <View className="mt-12 flex-1 items-center space-y-6">
+          <TouchableOpacity
+            className="h-[60px] items-center justify-center rounded-3xl bg-eggorange px-4 shadow-eggorange"
+            style={styles.shadowButton}
+            onPress={() =>
+              navigation.navigate("Journal", { dateSelected: dateSelected })
+            }
+          >
             <Text
               className="text-grey"
               style={{ fontFamily: "Satoshi-Bold", fontSize: 20 }}
             >
-              Sign out
+              {buttonMessage}
             </Text>
-          </View>
-        </TouchableOpacity>
-      </View>
-      <View className="mt-8">
-        <View className="ml-6">
-          <Text
-            className="top-2 text-eggwhite"
-            style={{ fontFamily: "ClashGrotesk-Regular", fontSize: 24 }}
-          >
-            Welcome {user?.displayName} {" :3"}
-          </Text>
-          <Text
-            className="text-eggwhite"
-            style={{ fontFamily: "ClashGrotesk-Medium", fontSize: 48 }}
-          >
-            {currentDay}
-          </Text>
-          <Text
-            className="text-eggwhite"
-            style={{ fontFamily: "ClashGrotesk-Light", fontSize: 24 }}
-          >
-            {currentDate}
-          </Text>
+          </TouchableOpacity>
         </View>
-        <Box className="mx-5 my-6">
-          <Text
-            className="text-eggwhite"
-            style={{ fontFamily: "Satoshi-Regular", fontSize: 24 }}
-          >
-            {quote}
-          </Text>
-          <Text
-            className="self-end text-[#B4A5A1]"
-            style={{ fontFamily: "Satoshi-Medium", fontSize: 14 }}
-          >
-            Jonathan Yun - 2021
-          </Text>
-        </Box>
-      </View>
-      {loading ? (
-        <CalendarComponentTwo
-          moodMap={moodMap}
-          setMessage={setButtonMessage}
-          selected={dateSelected}
-          setSelected={setDateSelected}
-        />
-      ) : (
-        <CalendarComponent
-          moodMap={moodMap}
-          setMessage={setButtonMessage}
-          selected={dateSelected}
-          setSelected={setDateSelected}
-        />
-      )}
-      <View className="mt-12 flex-1 items-center space-y-6">
-        <TouchableOpacity
-          className="h-[60px] items-center justify-center rounded-3xl bg-eggorange px-4 shadow-eggorange"
-          style={styles.shadowButton}
-          onPress={() =>
-            navigation.navigate("Journal", {
-              dateSelected: dateSelected,
-              setUpdate: setUpdate,
-            })
-          }
-        >
-          <Text
-            className="text-grey"
-            style={{ fontFamily: "Satoshi-Bold", fontSize: 20 }}
-          >
-            {buttonMessage}
-          </Text>
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
+      </SafeAreaView>
+      <NavigationBar navigation={navigation} />
+    </View>
   );
 };
 

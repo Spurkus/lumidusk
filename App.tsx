@@ -6,6 +6,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import Routes from "./Routes";
 import { FirebaseAuthProvider } from "./app/context/AuthContext";
 import { ModalProvider } from "./app/context/ModalContext";
+import { JournalProvider } from "./app/context/JournalContext";
 export default function App() {
   // Loading fonts
   const [fontsLoaded, fontError] = useFonts({
@@ -40,9 +41,11 @@ export default function App() {
   return (
     <NavigationContainer>
       <FirebaseAuthProvider>
-        <ModalProvider>
-          <Routes />
-        </ModalProvider>
+        <JournalProvider>
+          <ModalProvider>
+            <Routes />
+          </ModalProvider>
+        </JournalProvider>
       </FirebaseAuthProvider>
     </NavigationContainer>
   );

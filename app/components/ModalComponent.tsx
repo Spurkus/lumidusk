@@ -28,7 +28,7 @@ const ModalComponent: FunctionComponent<ModalComponentProps> = ({
       onBackdropPress={() => {
         backDropPress ? backDropPress.onBackdropPress() : toggleModal();
       }}
-      style={{ maxHeight: height }}
+      style={{ maxHeight: height, opacity: visible ? 100 : 0 }}
     >
       <Text
         className="mb-2 text-center text-eggwhite"
@@ -46,7 +46,10 @@ const ModalComponent: FunctionComponent<ModalComponentProps> = ({
       ) : (
         <></>
       )}
-      <View className="flex flex-row justify-center space-x-4">
+      <View
+        className="flex flex-row justify-center space-x-4"
+        style={{ opacity: visible ? 100 : 0 }}
+      >
         {buttons &&
           buttons.map((button, index) => (
             <TouchableOpacity

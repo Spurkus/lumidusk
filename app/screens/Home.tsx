@@ -12,19 +12,19 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { auth } from "../config/firebaseConfig";
 import { signOut } from "firebase/auth";
-import { useFirebaseAuth } from "../context/AuthContext";
 import { useModal } from "../context/ModalContext";
 import { FirebaseError } from "firebase/app";
+import { useFirebaseAuth } from "../context/AuthContext";
+import { useJournalData } from "../context/JournalContext";
 
 import Box from "../components/Box";
 import CalendarComponent from "../components/CalendarComponent";
 import CalendarComponentTwo from "../components/CalendarComponentTwo";
+import NavigationBar from "../components/NavigationBar";
 import { CalendarUtils } from "react-native-calendars";
 
 import Bonk from "../assets/bonk.png";
 import Bink from "../assets/bink.png";
-import { useJournalData } from "../context/JournalContext";
-import NavigationBar from "../components/NavigationBar";
 
 type HomeProps = NativeStackScreenProps<RootStackParamList, "Home">;
 type Mood = "happy" | "good" | "alright" | "sad" | "depressed";

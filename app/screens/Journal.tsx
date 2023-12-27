@@ -280,11 +280,19 @@ const Journal = ({ route, navigation }: JournalProps) => {
                   <View className="mx-auto mt-4 max-w-[175px] justify-center">
                     <DropDownPicker
                       style={{
-                        borderRadius: 20,
-                        zIndex: 100,
+                        borderRadius: 16,
+                        borderWidth: 0,
                         backgroundColor: backgroundColor,
                         borderColor: "#282826",
-                        borderWidth: 5,
+                        minHeight: 43,
+                        shadowColor: backgroundColor,
+                        shadowOpacity: 0.65,
+                        shadowRadius: 10,
+                      }}
+                      dropDownContainerStyle={{
+                        borderRadius: 15,
+                        borderWidth: 0,
+                        marginTop: 7,
                       }}
                       disableBorderRadius={false}
                       showTickIcon={false}
@@ -301,7 +309,7 @@ const Journal = ({ route, navigation }: JournalProps) => {
                         fontFamily: "ClashGrotesk-Medium",
                         fontSize: 18,
                         color: "#FFFFE3",
-                        left: 10,
+                        left: 12,
                       }}
                       placeholderStyle={{
                         textAlign: "center",
@@ -316,7 +324,6 @@ const Journal = ({ route, navigation }: JournalProps) => {
                         fontSize: 18,
                         color: "#FFFFE3",
                       }}
-                      listItemContainerStyle={{ zIndex: 100 }}
                     />
                   </View>
                 </View>

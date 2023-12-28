@@ -48,7 +48,7 @@ const SearchBar = ({ search, setSearch }: SearchBarProps) => {
           <FontAwesomeIcon
             icon={faXmark}
             size={20}
-            color="black"
+            color="gray"
             style={{ padding: 1 }}
           />
         </TouchableOpacity>

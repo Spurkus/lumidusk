@@ -234,7 +234,7 @@ const Journal = ({ route, navigation }: JournalProps) => {
               <TouchableOpacity
                 className="ml-4 max-w-[60px] flex-row items-center"
                 onPress={() => {
-                  navigation.navigate("Home");
+                  navigation.goBack();
                 }}
               >
                 <FontAwesomeIcon

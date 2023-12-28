@@ -15,9 +15,7 @@ export type RootStackParamList = {
   SignUp: undefined;
   Login: undefined;
   Home: undefined;
-  Journal: {
-    dateSelected: string;
-  };
+  Journal: { dateSelected: string };
   JournalSearch: undefined;
 };
 

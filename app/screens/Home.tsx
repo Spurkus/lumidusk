@@ -50,13 +50,12 @@ const quote = '"remember to be kind to yourself"';
 const Home = ({ navigation }: HomeProps) => {
   const user = useFirebaseAuth();
   const modal = useModal();
-  const journal = useJournalData();
+  const { update, setUpdate, dateSelected, setDateSelected } = useJournalData();
 
   const [moodMap, setMoodMap] = useState({});
   const [buttonMessage, setButtonMessage] = useState(
     "Start Today's Journaling",
   );
-  const [dateSelected, setDateSelected] = useState(initialDate);
   const [loading, setLoading] = useState(true);
 
   const loadMoodData = async () => {
@@ -118,13 +117,17 @@ const Home = ({ navigation }: HomeProps) => {
   };
 
   useEffect(() => {
+    setDateSelected(initialDate);
+  }, []);
+
+  useEffect(() => {
     loadMoodData();
   }, [user]);
 
   useEffect(() => {
     loadMoodData();
-    journal.setUpdate(false);
-  }, [journal.update]);
+    setUpdate(false);
+  }, [update]);
 
   return (
     <View className="flex-1">

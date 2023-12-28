@@ -36,7 +36,7 @@ type itemProps = {
 const JournalSearch = ({ navigation }: JournalProps) => {
   const user = useFirebaseAuth();
   const modal = useModal();
-  const journal = useJournalData();
+  const { update, setUpdate } = useJournalData();
 
   const [searchPhrase, setSearchPhrase] = useState("");
   const [journals, setJournals] = useState<itemProps[]>([]);
@@ -52,15 +52,15 @@ const JournalSearch = ({ navigation }: JournalProps) => {
         if (key.startsWith("journal_") && key.split("_")[1] === user?.uid) {
           const storedData = await AsyncStorage.getItem(key);
           if (storedData) {
-            const parsedData = JSON.parse(storedData);
+            const { title, mood } = JSON.parse(storedData);
             const date = key
               .replace("journal_", "")
               .replace(`${user?.uid}_`, "");
 
             loadedJournals.push({
               date,
-              title: parsedData.title,
-              mood: parsedData.mood,
+              title,
+              mood,
             });
           }
         }
@@ -85,8 +85,8 @@ const JournalSearch = ({ navigation }: JournalProps) => {
 
   useEffect(() => {
     loadMoodData();
-    journal.setUpdate(false);
-  }, [journal.update]);
+    setUpdate(false);
+  }, [update]);
 
   return (
     <TouchableWithoutFeedback

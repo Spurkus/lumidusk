@@ -17,6 +17,7 @@ import { RootStackParamList } from "../../Routes";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFirebaseAuth } from "../context/AuthContext";
 import { useModal } from "../context/ModalContext";
+import { CalendarUtils } from "react-native-calendars";
 import { FirebaseError } from "firebase/app";
 import DropDownPicker from "react-native-dropdown-picker";
 DropDownPicker.setListMode("SCROLLVIEW"); // Makes the thing happy
@@ -64,11 +65,9 @@ const formatDate = (date: Date) => {
 };
 
 const Journal = ({ route, navigation }: JournalProps) => {
-  const { setUpdate } = useJournalData();
-  const { dateSelected } = route.params;
-
   const user = useFirebaseAuth();
   const modal = useModal();
+  const { dateSelected, setDateSelected, setUpdate } = useJournalData();
 
   const [openDropdown, setOpenDropdowwn] = useState(false);
   const [mood, setMood] = useState<Mood>("");
@@ -118,10 +117,20 @@ const Journal = ({ route, navigation }: JournalProps) => {
   const day = days[date.getDay()];
   const formattedDate = formatDate(date);
 
+  const incrementDate = (amount: number) => {
+    const newDate = new Date(date);
+    newDate.setDate(newDate.getDate() + amount);
+    const newDateString = CalendarUtils.getCalendarDateString(newDate);
+    navigation.setParams({ dateSelected: newDateString });
+    setDateSelected(newDateString);
+  };
+
   useEffect(() => {
     const selectedMood = moods.find((m) => m.value === mood);
     if (selectedMood) {
       setBackgroundColor(selectedMood.containerStyle.backgroundColor);
+    } else {
+      setBackgroundColor("#505050");
     }
   }, [mood]);
 
@@ -157,6 +166,10 @@ const Journal = ({ route, navigation }: JournalProps) => {
         setTitle(parsedData.title);
         setText(parsedData.text);
         setMood(parsedData.mood);
+      } else {
+        setTitle("");
+        setText("");
+        setMood("");
       }
     } catch (error) {
       console.error("Error loading journal data:", error);
@@ -164,8 +177,13 @@ const Journal = ({ route, navigation }: JournalProps) => {
   };
 
   useEffect(() => {
+    setDateSelected(route.params.dateSelected);
     loadJournalData();
   }, []);
+
+  useEffect(() => {
+    loadJournalData();
+  }, [dateSelected]);
 
   useEffect(() => {
     const unsubscribeBeforeRemove = navigation.addListener(
@@ -256,7 +274,7 @@ const Journal = ({ route, navigation }: JournalProps) => {
             >
               <View className="flex-row justify-between p-1">
                 <View className="my-auto">
-                  <TouchableOpacity>
+                  <TouchableOpacity onPress={() => incrementDate(-1)}>
                     <FontAwesomeIcon
                       style={{ color: "#FFFFE3" }}
                       size={35}
@@ -328,7 +346,7 @@ const Journal = ({ route, navigation }: JournalProps) => {
                   </View>
                 </View>
                 <View className="my-auto">
-                  <TouchableOpacity>
+                  <TouchableOpacity onPress={() => incrementDate(1)}>
                     <FontAwesomeIcon
                       style={{ color: "#FFFFE3" }}
                       size={35}
